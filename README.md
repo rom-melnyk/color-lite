@@ -1,7 +1,7 @@
 # color.js - the color managing library.
 Currently parses HSLA only. RGB(a) will be release in further versions.
 
-```
+```js
 var c1 = new $color.hsla(30, 50, 70, .9);
 var c2 = new $color.hsla('hsla(140, 75%, 30%, .2)');
 
