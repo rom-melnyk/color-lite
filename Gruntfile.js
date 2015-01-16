@@ -1,111 +1,29 @@
 'use strict';
 
-var paths = {
-  js: ['*.js', 'test/**/*.js', '!test/coverage/**', '!bower_components/**', 'packages/**/*.js', '!packages/**/node_modules/**', '!packages/contrib/**/*.js', '!packages/contrib/**/node_modules/**'],
-  html: ['packages/**/public/**/views/**', 'packages/**/server/views/**'],
-  css: ['!bower_components/**', 'packages/**/public/**/css/*.css', '!packages/contrib/**/public/**/css/*.css']
-};
+var jsFiles = ['color.js', 'color.masks.js', 'color.hsla.js'];
+var jsConcat = 'color.concat.js';
+
+jsFiles = jsFiles.map(function (file) {
+  return 'dev/' + file;
+});
 
 module.exports = function(grunt) {
-
-  if (process.env.NODE_ENV !== 'production') {
-    require('time-grunt')(grunt);
-  }
-
   // Project Configuration
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    assets: grunt.file.readJSON('config/assets.json'),
-    clean: ['bower_components/build'],
-    watch: {
-      js: {
-        files: paths.js,
-        tasks: [], // TODO place 'jshint' after dev
-        options: {
-          livereload: true
-        }
-      },
-      html: {
-        files: paths.html,
-        options: {
-          livereload: true,
-          interval: 500
-        }
-      },
-      css: {
-        files: paths.css,
-        tasks: [], // TODO place 'csslint' after dev
-        options: {
-          livereload: true
-        }
-      }
-    },
-    jshint: {
-      all: {
-        src: paths.js,
-        options: {
-          jshintrc: true
-        }
+    concat: {
+      dist: {
+        src: jsFiles,
+        dest: jsConcat
       }
     },
     uglify: {
       core: {
         options: {
-          mangle: false
+          mangle: true
         },
-        files: '<%= assets.core.js %>'
-      }
-    },
-    csslint: {
-      options: {
-        csslintrc: '.csslintrc'
-      },
-      src: paths.css
-    },
-    cssmin: {
-      core: {
-        files: '<%= assets.core.css %>'
-      }
-    },
-    nodemon: {
-      dev: {
-        script: 'server.js',
-        options: {
-          args: [],
-          ignore: ['node_modules/**'],
-          ext: 'js,html',
-          nodeArgs: ['--debug'],
-          delayTime: 1,
-          cwd: __dirname
+        files: {
+          'color.min.js': [jsConcat]
         }
-      }
-    },
-    concurrent: {
-      tasks: ['nodemon', 'watch'],
-      options: {
-        logConcurrentOutput: true
-      }
-    },
-    mochaTest: {
-      options: {
-        reporter: 'spec',
-        require: [
-          'server.js',
-          function() {
-            require('meanio/lib/util').preload(__dirname + '/packages/**/server', 'model');
-          }
-        ]
-      },
-      src: ['packages/**/server/tests/**/*.js']
-    },
-    env: {
-      test: {
-        NODE_ENV: 'test'
-      }
-    },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js'
       }
     }
   });
@@ -114,16 +32,5 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   //Default task(s).
-  if (process.env.NODE_ENV === 'production') {
-    grunt.registerTask('default', ['clean', 'cssmin', 'uglify', 'concurrent']);
-  } else {
-        grunt.registerTask('default', ['clean', /*'jshint', 'csslint',*/ 'concurrent']); // TODO remove after dev
-  }
-
-  //Test task.
-  grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-
-  // For Heroku users only.
-  // Docs: https://github.com/linnovate/mean/wiki/Deploying-on-Heroku
-  grunt.registerTask('heroku:production', ['cssmin', 'uglify']);
+  grunt.registerTask('default', ['concat', 'uglify']);
 };

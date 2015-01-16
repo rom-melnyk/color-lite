@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Color.js test page</title>
+  <!-- <script type="text/javascript" src="../color.concat.js"></script> -->
+  <script type="text/javascript" src="../color.min.js"></script>
+  <style type="text/css">
+    body {
+      min-width: 800px;
+      padding: 1em;
+      font-size: 24px;
+      font-family: Georgia, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    p {
+      margin: 0 auto .5em;
+      padding: .5em 2em;
+      width: 80%;
+    }
+
+    /* --------------- left and right panels --------------- */
+    .left {
+      width: 60%;
+      float: left;
+    }
+    .right {
+      width: 30%;
+      float: right;
+    }
+
+    /* --------------- paragraphs with colors --------------- */
+    .left p > * {
+      vertical-align: middle;
+    }
+    .left p span {
+      padding-left: 1em;
+      font-family: monospace;
+      font-size: 80%;
+    }
+
+    /* --------------- HSLA color components --------------- */
+    .right label, .right input {
+      vertical-align: middle;
+    }
+    .right label {
+      display: inline-block;
+      width: 30%;
+      font-family: monospace;
+      font-size: 50%;
+    }
+    .right input {
+      width: 60%;
+    }
+  </style>
+</head>
+<body>
+  <h1>The <i>color.js</i> test page</h1>
+  <div class="left">
+    <p id="c1">
+      <input type="radio" name="color" checked="true"/>
+      <span></span>
+    </p>
+    <p id="c2">
+      <input type="radio" name="color"/>
+      <span></span>
+    </p>
+    <p id="c3">
+      <input type="radio" name="color"/>
+      <span></span>
+    </p>
+    
+  </div>
+  <div class="right">
+    <label for="hue">Hue</label>
+    <input id="hue" type="range" min="0" max="360" step="10"/>
+    <br/>
+    <label for="saturation">Saturation</label>
+    <input id="saturation" type="range" min="0" max="100" step="10"/>
+    <br/>
+    <label for="lightness">Lightness</label>
+    <input id="lightness" type="range" min="0" max="100" step="10"/>
+    <br/>
+    <label for="alpha">Alpha</label>
+    <input id="alpha" type="range" min="0" max="1" step=".1"/>
+    <br/>
+  </div>
+  <script type="text/javascript">
+    var colors = {
+      c1: new $color.hsla(30, 40, 50),
+      c2: new $color.hsla(230, 70, 30, .3),
+      c3: new $color.hsla(180, 90, 60, .8)
+    };
+
+    var selected = {};
+
+    // this is the event handler; `this` means the <input type="radio">
+    var manageRadioSelector = function () {
+      var colKey;
+      selected.p = this.parentElement;
+      selected.span = this.parentElement && this.parentElement.getElementsByTagName('span')[0];
+      colKey = selected.p.id;
+
+      document.getElementById('hue').value = colors[ colKey ].h;
+      document.getElementById('saturation').value = colors[ colKey ].s;
+      document.getElementById('lightness').value = colors[ colKey ].l;
+      document.getElementById('alpha').value = colors[ colKey ].a;
+    };
+
+    // this is the event handler; `this` means the <input type="range">
+    var manageColorComponent = function () {
+      var val = +this.value;
+      var color;
+
+      if (!selected.span || !selected.p) {
+        return;
+      }
+
+      color = colors[ selected.p.id ];
+
+      switch (this.id) {
+        case "hue":
+          color.set({ h: val });
+          break;
+        case "saturation":
+          color.set({ s: val });
+          break;
+        case "lightness":
+          color.set({ l: val });
+          break;
+        case "alpha":
+          color.set({ a: val });
+          break;
+      }
+      selected.p.style.backgroundColor = color.toString();
+      selected.span.innerHTML = color.toString();
+    };
+
+    // initial background-color setting
+    for (var key in colors) {
+      if (colors.hasOwnProperty(key)) {
+        document.getElementById(key).style.backgroundColor = colors[key].toString();
+        document.getElementById(key).getElementsByTagName('span')[0].innerHTML = colors[key].toString();
+      }
+    }
+
+    // initial slider setting
+    manageRadioSelector.call(document.querySelector('[name=color][checked=true]'));
+
+    [].slice.call(document.querySelectorAll('[name=color]')).forEach(function (input) {
+      input.onchange = manageRadioSelector;
+    });
+    [].slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {
+      input.onchange = manageColorComponent;
+    });
+  </script>
+</body>
+</html>
