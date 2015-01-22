@@ -1,10 +1,10 @@
 'use strict';
 
-var jsFiles = ['color.js', 'color.masks.js', 'color.hsla.js'];
+var jsFiles = ['color', 'color.masks', 'color.parse', 'color.normalize', 'color.__Factory__', 'color.hsla'];
 var jsConcat = 'color.concat.js';
 
 jsFiles = jsFiles.map(function (file) {
-  return 'dev/' + file;
+  return 'dev/' + file + '.js';
 });
 
 module.exports = function(grunt) {
