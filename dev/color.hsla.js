@@ -1,7 +1,7 @@
 ;(function (color) {
 	/**
 	 * @constructor
-	 * @param {Number|String|Object} h			hue value or the "hsl(...)" string or the {h:..., s:..., l:..., a:...} object
+	 * @param {Number|String|Object} h			hue value or the "hsla(...)" string or the {h:..., s:..., l:..., a:...} object
 	 * @param {Number} [s]						saturation value
 	 * @param {Number} [l]						brightness/luminosity value
 	 * @param {Number} [a]						alpha value

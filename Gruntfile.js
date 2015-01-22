@@ -1,6 +1,9 @@
 'use strict';
 
-var jsFiles = ['color', 'color.masks', 'color.parse', 'color.normalize', 'color.__Factory__', 'color.hsla'];
+var jsFiles = ['color',
+	'color.masks', 'color.parse', 'color.normalize', 'color.__Factory__',
+	'color.hsla', 'color.hsl', 'color.rgba', 'color.rgb'
+];
 var jsConcat = 'color.concat.js';
 
 jsFiles = jsFiles.map(function (file) {
