@@ -25,9 +25,11 @@ Contains following params:
 * `.type` -- means one of "rgb", "rgba", "hsl", "hsla".
 * per-channel properties (for instance, `.h`, `.s`, `.l` respecting the type).
 * `.set()` method. It expects the object (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
+  * You can pass only several channels into this methods not always all ones: `.set({h: 30, a: .3})` is fine.
 * `.set.h()`, `.set.s()`, `.set.l()` and so on according to color type. All these methods expect number.
-* `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass the delta not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 point.
+* `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 point.
   * All the _setters_ and _tuners_ respect the channel constrains. For instance, if you try to set _alpha > 1_ it will be set to _1_.
+  * Thw **hue** channel is 'circular' so setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
 * `.clone()` -- returns the clone of the instance (not the reference).
 * `.toString()` -- overrides the standard `Object.toString()` and returns the CSS-friendly value.
 
