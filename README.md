@@ -28,17 +28,17 @@ Contains following params:
   * You can pass only several channels into this methods not always all ones: `.set({h: 30, a: .3})` is fine.
 * `.set.h()`, `.set.s()`, `.set.l()` and so on according to color type. All these methods expect number.
 * `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 point.
-  * All the _setters_ and _tuners_ respect the channel constrains. For instance, if you try to set _alpha > 1_ it will be set to _1_.
-  * Thw **hue** channel is 'circular' so setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
-* `.clone()` -- returns the clone of the instance (not the reference).
+  * All the **setters** and **tuners** respect channel constraints. So if you set _alpha to 2.5_ it will be actually set to _1_.
+  * The **hue** channel is 360-degree-circular. So setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
+* `.clone()` -- returns the new clone of the instance (not the reference).
 * `.toString()` -- overrides the standard `Object.toString()` and returns the CSS-friendly value.
 
-## Planned for further releases:
+## Planned for further releases
 * make the `rgb.toString()` able to produce `#abcdef`-like output;
 * RGB-HSL-RGB converter
 
 ## Support
-IE8 is not supported at this moment. All the other modern browsers support this library well.
+IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.
 
 ## Credits
 Roman Melnyk <email.rom.melnyk@gmail.com>
