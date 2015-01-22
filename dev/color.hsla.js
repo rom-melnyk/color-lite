@@ -23,8 +23,10 @@
 		 * Utility; assigns the value to the given property of `this` respecting the range constraints
 		 * @param {String} prop							there will be `me[prop]` created
 		 * @param {Number} value
-		 * @param {Number} fromLimit, fromValue			the value constraints
-		 * @param {Number} toLimit, toValue
+		 * @param {Number} fromLimit					the value constraints
+		 * @param {Number} fromValue
+		 * @param {Number} toLimit
+		 * @param {Number} toValue
 		 */
 		var setProperty = function (prop, value, fromLimit, fromValue, toLimit, toValue) {
 			if (value < fromLimit) {
@@ -34,24 +36,6 @@
 			} else {
 				me[prop] = value;
 			}
-		};
-
-		/**
-		 * Tunes the HSLA components
-		 * @param {Object} shift			like `{h: 30, s: -10, l: 50, a: -.3}`. Properties are not mandatory.
-		 */
-		me.tune = function (shift) {
-			if (typeof shift !== 'object') {
-				shift = {};
-			}
-
-			['h', 's', 'l', 'a'].forEach(function (key) {
-				if (typeof shift[key] === 'number') {
-					me.set[key](me[key] + shift[key]);
-				}
-			});
-
-			return me;
 		};
 
 		/**
@@ -74,7 +58,7 @@
 
 		// Setters for each component respecting special constraints
 		me.set.h = function (h) {
-			setProperty('h', parseInt(h) || 0, 0, 360 - h % 360, 360, h % 360);
+			setProperty('h', parseInt(h) || 0, 0, 360 - (360 - h) % 360, 360, h % 360);
 		};
 		me.set.s = function (s) {
 			setProperty('s', parseInt(s) || 0, 0, 0, 100, 100);
@@ -83,8 +67,26 @@
 			setProperty('l', parseInt(l) || 0, 0, 0, 100, 100);
 		};
 		me.set.a = function (a) {
-			a = parseFloat(a)
+			a = parseFloat(a);
 			setProperty('a', isNaN(a) ? 1 : a, 0, 0, 1, 1);
+		};
+
+		/**
+		 * Tunes the HSLA components
+		 * @param {Object} shift			like `{h: 30, s: -10, l: 50, a: -.3}`. Properties are not mandatory.
+		 */
+		me.tune = function (shift) {
+			if (typeof shift !== 'object') {
+				return me;
+			}
+
+			['h', 's', 'l', 'a'].forEach(function (key) {
+				if (typeof shift[key] === 'number') {
+					me.set[key](me[key] + shift[key]);
+				}
+			});
+
+			return me;
 		};
 
 		/**
@@ -104,7 +106,7 @@
 		 */
 		me.clone = function () {
 			return new me.constructor(me.h, me.s, me.l, me.a);
-		}
+		};
 
 		// actually, create the object
 		me.set.h(h);
