@@ -23,7 +23,7 @@ for your convenience, you can pass the _"rgba(...)"_ string into `$color.rgb()` 
 
 ## The color instance
 Contains following params:
-* `.type` -- means one of "rgb", "rgba", "hsl", "hsla".
+* `.type` &mdash; means one of "rgb", "rgba", "hsl", "hsla".
 * per-channel properties (for instance, `.h`, `.s`, `.l` respecting the type).
 * `.set()` method. It expects the object (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
   * You can pass only several channels into this methods not always all ones: `.set({h: 30, a: .3})` is fine.
@@ -31,13 +31,13 @@ Contains following params:
 * `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 point.
   * All the **setters** and **tuners** respect channel constraints. So if you set _alpha to 2.5_ it will be actually set to _1_.
   * The **hue** channel is 360-degree-circular. So setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
-* `.clone()` -- returns the new clone of the instance (not the reference).
-* `.toString()` -- overrides the standard `Object.toString()` and returns the CSS-friendly value.
-  * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter;
+* `.clone()` &mdash; returns the new clone of the instance (not the reference).
+* `.toString()` &mdash; overrides the standard `Object.toString()` and returns the CSS-friendly value.
+  * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter;  
    if set to `"hex"`, it makes the output look like `"#abcdef"` instead of the default `"rgb(49, 128, 200)"`.
 
 ## Planned for further releases
-* make the `rgb.toString()` able to produce `#abcdef`-like output;
+* single constructor
 * RGB-HSL-RGB converter
 
 ## Support
