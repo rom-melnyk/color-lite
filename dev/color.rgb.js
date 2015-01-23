@@ -9,13 +9,19 @@
 
 	/**
 	 * @override
-	 * @return {String}				something like "rgba(154, 45, 250)"
+	 * @param [hex=false]			if set to "hex", makes the output like "#ba5e7f"
+	 * @return {String}				something like "rgba(154, 45, 250)" or "#ba5e7f"
 	 */
-	color.rgb.prototype.toString = function () {
-		return 'rgb('
-			+ this.r + ', '
-			+ this.g + ', '
-			+ this.b + ')';
+	color.rgb.prototype.toString = function (hex) {
+		return (hex === 'hex')
+			? '#'
+				+ this.r.toString(16)
+				+ this.g.toString(16)
+				+ this.b.toString(16)
+			: 'rgb('
+				+ this.r + ', '
+				+ this.g + ', '
+				+ this.b + ')';
 	};
 
 
