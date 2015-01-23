@@ -1,6 +1,6 @@
 {
   "name": "color-js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The convenient way to handle the color in JS",
   "keywords": "color rgb rgba hsl hsla red green blue hue saturation brightness lightness opacity transparency",
   "author": "Roman Melnyk <email.rom.melnyk@gmail.com>",

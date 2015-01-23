@@ -17,6 +17,7 @@ Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $
 * or the *string* representation: `new $color.rgba("rgba(200, 30, 21, 0.5)")`  
 for your convenience, you can pass the _"rgba(...)"_ string into `$color.rgb()` constructor and vice versa; same for HSL/HSLA. In this case the missed _Alpha_ value will be set to _1_.
   * Pay attention, the string must be correct so if you pass _"rgba()"_, we expect _4 arguments_ in parentheses!
+  * The particular `new $color.rgb()` constructor supports also _"#abcdef"_ and _"#abc"_ strings (case-insensitive).
   * Extra spaces in the string are ignored;
 * or the *sequence of numbers:* `new $color.hsl(180, 30, 75)`.
 
@@ -32,6 +33,8 @@ Contains following params:
   * The **hue** channel is 360-degree-circular. So setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
 * `.clone()` -- returns the new clone of the instance (not the reference).
 * `.toString()` -- overrides the standard `Object.toString()` and returns the CSS-friendly value.
+  * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter;
+   if set to `"hex"`, it makes the output look like `"#abcdef"` instead of the default `"rgb(49, 128, 200)"`.
 
 ## Planned for further releases
 * make the `rgb.toString()` able to produce `#abcdef`-like output;
