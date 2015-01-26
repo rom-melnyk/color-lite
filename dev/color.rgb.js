@@ -24,5 +24,13 @@
 				+ this.b + ')';
 	};
 
+	/**
+	 * @return {Object}				same color but in HSL
+	 */
+	color.rgb.prototype.toHsl = function () {
+		return new color.hsl(
+			color.convert.rgb2hsl(this)
+		);
+	};
 
 })(window.$color);

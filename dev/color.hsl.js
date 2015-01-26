@@ -18,5 +18,14 @@
 			+ this.l + '%)';
 	};
 
+	/**
+	 * @return {Object}				same but in RGB
+	 */
+	color.hsl.prototype.toRgb = function () {
+		return new color.rgb(
+			color.convert.hsl2rgb(this)
+		);
+	};
+
 
 })(window.$color);

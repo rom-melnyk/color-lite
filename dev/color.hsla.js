@@ -20,5 +20,13 @@
 			+ this.a + ')';
 	};
 
+	/**
+	 * @return {Object}				same but in RGBA
+	 */
+	color.hsla.prototype.toRgba = function () {
+		var rgba = color.convert.hsl2rgb(this);
+		rgba.a = this.a;
+		return new color.rgba(rgba);
+	};
 
 })(window.$color);

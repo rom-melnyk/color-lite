@@ -1,7 +1,7 @@
 'use strict';
 
 var jsFiles = ['color',
-	'color.masks', 'color.parse', 'color.normalize', 'color.__Factory__',
+	'color.masks', 'color.parse', 'color.normalize', 'color.__Factory__', 'color.convert',
 	'color.hsla', 'color.hsl', 'color.rgba', 'color.rgb'
 ];
 var jsConcat = 'color.concat.js';
