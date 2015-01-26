@@ -2,17 +2,20 @@
 <html>
 <head>
   <title>Color.js test page</title>
-  <!-- <script type="text/javascript" src="../color.concat.js"></script> -->
-  <script type="text/javascript" src="../color.min.js"></script>
+    <!--<script type="text/javascript" src="../color.concat.js"></script>-->
+   <script type="text/javascript" src="../color.min.js"></script>
   <style type="text/css">
     body {
       min-width: 800px;
       padding: 1em;
       font-size: 24px;
-      font-family: Georgia, sans-serif;
+      font-family: Verdana, Arial, Helvetica, sans-serif;
     }
-    h1 {
+    h1, h4 {
+      margin: 0.5em 0;
       text-align: center;
+      font-weight: normal;
+      color: #777;
     }
     p {
       margin: 0 auto .5em;
@@ -20,7 +23,15 @@
       width: 80%;
     }
 
-    /* --------------- left and right panels --------------- */
+    /* --------------- left / right panels, container --------------- */
+    .container {
+      margin: 1em 0 0;
+    }
+    .container:after {
+      display: block;
+      content: " ";
+      clear: both;
+    }
     .left {
       width: 60%;
       float: left;
@@ -40,7 +51,7 @@
       font-size: 80%;
     }
 
-    /* --------------- HSLA color components --------------- */
+    /* --------------- color components --------------- */
     .right label, .right input {
       vertical-align: middle;
     }
@@ -53,44 +64,85 @@
     .right input {
       width: 60%;
     }
+    input[disabled] {
+      opacity: .5;
+    }
   </style>
 </head>
 <body>
-  <h1>The <i>color.js</i> test page</h1>
-  <div class="left">
-    <p id="c1">
-      <input type="radio" name="color" checked="true"/>
-      <span></span>
-    </p>
-    <p id="c2">
-      <input type="radio" name="color"/>
-      <span></span>
-    </p>
-    <p id="c3">
-      <input type="radio" name="color"/>
-      <span></span>
-    </p>
-    
+  <h1>The <b>color.js</b> test page</h1>
+  <div class="container">
+    <h4>The HSLA model</h4>
+    <div class="left">
+      <p id="c1">
+        <input type="radio" name="color" checked="true"/>
+        <span></span>
+      </p>
+      <p id="c2">
+        <input type="radio" name="color"/>
+        <span></span>
+      </p>
+      <p id="c3">
+        <input type="radio" name="color"/>
+        <span></span>
+      </p>
+    </div>
+    <div class="right">
+      <label for="hue">Hue</label>
+      <input id="hue" type="range" min="0" max="360" step="10"/>
+      <br/>
+      <label for="saturation">Saturation</label>
+      <input id="saturation" type="range" min="0" max="100" step="5"/>
+      <br/>
+      <label for="lightness">Lightness</label>
+      <input id="lightness" type="range" min="0" max="100" step="5"/>
+      <br/>
+      <label for="hsl-alpha">Alpha</label>
+      <input id="hsl-alpha" type="range" min="0" max="1" step=".05"/>
+      <br/>
+    </div>
   </div>
-  <div class="right">
-    <label for="hue">Hue</label>
-    <input id="hue" type="range" min="0" max="360" step="10"/>
-    <br/>
-    <label for="saturation">Saturation</label>
-    <input id="saturation" type="range" min="0" max="100" step="10"/>
-    <br/>
-    <label for="lightness">Lightness</label>
-    <input id="lightness" type="range" min="0" max="100" step="10"/>
-    <br/>
-    <label for="alpha">Alpha</label>
-    <input id="alpha" type="range" min="0" max="1" step=".1"/>
-    <br/>
+
+  <div class="container">
+    <h4>The RGBA model</h4>
+    <div class="left">
+      <p id="c4">
+        <input type="radio" name="color"/>
+        <span></span>
+      </p>
+      <p id="c5">
+        <input type="radio" name="color"/>
+        <span></span>
+      </p>
+      <p id="c6">
+        <input type="radio" name="color"/>
+        <span></span>
+      </p>
+    </div>
+    <div class="right">
+      <label for="red">Red</label>
+      <input id="red" type="range" min="0" max="255" step="5"/>
+      <br/>
+      <label for="green">Green</label>
+      <input id="green" type="range" min="0" max="255" step="5"/>
+      <br/>
+      <label for="blue">Blue</label>
+      <input id="blue" type="range" min="0" max="255" step="5"/>
+      <br/>
+      <label for="rgb-alpha">Alpha</label>
+      <input id="rgb-alpha" type="range" min="0" max="1" step=".05"/>
+      <br/>
+    </div>
   </div>
+
   <script type="text/javascript">
     var colors = {
       c1: new $color.hsla(30, 40, 50),
       c2: new $color.hsla(230, 70, 30, .3),
-      c3: new $color.hsla(180, 90, 60, .8)
+      c3: new $color.hsla(180, 90, 60, .8),
+      c4: new $color.rgb('#3f55a8'),
+      c5: new $color.rgba('rgba(80, 160, 122, .7)'),
+      c6: new $color.rgba('rgb(180, 60, 30)')
     };
 
     var selected = {};
@@ -102,10 +154,29 @@
       selected.span = this.parentElement && this.parentElement.getElementsByTagName('span')[0];
       colKey = selected.p.id;
 
-      document.getElementById('hue').value = colors[ colKey ].h;
-      document.getElementById('saturation').value = colors[ colKey ].s;
-      document.getElementById('lightness').value = colors[ colKey ].l;
-      document.getElementById('alpha').value = colors[ colKey ].a;
+      if (['c1', 'c2', 'c3'].indexOf(colKey) !== -1) {
+        document.getElementById('hue').value = colors[ colKey ].h;
+        document.getElementById('saturation').value = colors[ colKey ].s;
+        document.getElementById('lightness').value = colors[ colKey ].l;
+        document.getElementById('hsl-alpha').value = colors[ colKey ].a;
+        ['red', 'green', 'blue', 'rgb-alpha'].forEach(function (id) {
+          document.getElementById(id).disabled = true;
+        });
+        ['hue', 'saturation', 'lightness', 'hsl-alpha'].forEach(function (id) {
+          document.getElementById(id).disabled = false;
+        });
+      } else { // ['c4', 'c5', 'c6']
+        document.getElementById('red').value = colors[ colKey ].r;
+        document.getElementById('green').value = colors[ colKey ].g;
+        document.getElementById('blue').value = colors[ colKey ].b;
+        document.getElementById('rgb-alpha').value = colors[ colKey ].a;
+        ['hue', 'saturation', 'lightness', 'hsl-alpha'].forEach(function (id) {
+          document.getElementById(id).disabled = true;
+        });
+        ['red', 'green', 'blue', 'rgb-alpha'].forEach(function (id) {
+          document.getElementById(id).disabled = false;
+        });
+      }
     };
 
     // this is the event handler; `this` means the <input type="range">
@@ -129,12 +200,31 @@
         case "lightness":
           color.set({ l: val });
           break;
-        case "alpha":
-          color.set({ a: val });
+        case "hsl-alpha":
+          if (color.type === 'hsla') {
+            color.set({ a: val });
+          }
+          break;
+        case "red":
+          color.set({ r: val });
+          break;
+        case "green":
+          color.set({ g: val });
+          break;
+        case "blue":
+          color.set({ b: val });
+          break;
+        case "rgb-alpha":
+          if (color.type === 'rgba') {
+            color.set({ a: val });
+          }
           break;
       }
       selected.p.style.backgroundColor = color.toString();
       selected.span.innerHTML = color.toString();
+      if (color.type === 'rgb') {
+        selected.span.innerHTML += ', ' + color.toString('hex');
+      }
     };
 
     // initial background-color setting
@@ -142,13 +232,16 @@
       if (colors.hasOwnProperty(key)) {
         document.getElementById(key).style.backgroundColor = colors[key].toString();
         document.getElementById(key).getElementsByTagName('span')[0].innerHTML = colors[key].toString();
+        if (colors[key].type === 'rgb') {
+          document.getElementById(key).getElementsByTagName('span')[0].innerHTML += ', ' + colors[key].toString('hex');
+        }
       }
     }
 
     // initial slider setting
     manageRadioSelector.call(document.querySelector('[name=color][checked=true]'));
 
-    [].slice.call(document.querySelectorAll('[name=color]')).forEach(function (input) {
+    [].slice.call(document.querySelectorAll('[name=color], [name=color]')).forEach(function (input) {
       input.onchange = manageRadioSelector;
     });
     [].slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {

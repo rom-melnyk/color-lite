@@ -2,7 +2,7 @@
  * @private
  * @factory
  * Creates the constructor for any type of the color: RGB(a), HSL(a).
- * The constructor will create following instance (for instance):
+ * The constructor will create following instance (respecting channels):
  * {
  * 		r:..., g:..., b:...,
  * 		set: function ({}) {...},
