@@ -16,7 +16,7 @@ Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $
 * either the *object* with properties corresponding to each channel: `new $color({r: 100, g: 150, b: 300})`
 * or the *string* representation: `new $color.rgba("rgba(200, 30, 21, 0.5)")`  
 for your convenience, you can pass the _"rgba(...)"_ string into `$color.rgb()` constructor and vice versa; same for HSL/HSLA. In this case the missed _Alpha_ value will be set to _1_.
-  * Pay attention, the string must be correct so if you pass _"rgba()"_, we expect _4 arguments_ in parentheses!
+  * Pay attention, the string must be correct so if you pass _"rgba(...)"_, we expect _4 arguments_ in parentheses!
   * The particular `new $color.rgb()` constructor supports also _"#abcdef"_ and _"#abc"_ strings (case-insensitive).
   * Extra spaces in the string are ignored;
 * or the *sequence of numbers:* `new $color.hsl(180, 30, 75)`.
@@ -28,13 +28,13 @@ Contains following params:
 * `.set()` method. It expects the object (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
   * You can pass only several channels into this methods not always all ones: `.set({h: 30, a: .3})` is fine.
 * `.set.h()`, `.set.s()`, `.set.l()` and so on according to color type. All these methods expect number.
-* `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 point.
+* `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 points.
   * All the **setters** and **tuners** respect channel constraints. So if you set _alpha to 2.5_ it will be actually set to _1_.
   * The **hue** channel is 360-degree-circular. So setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
 * `.clone()` &mdash; returns the new clone of the instance (not the reference).
 * `.toString()` &mdash; overrides the standard `Object.toString()` and returns the CSS-friendly value.
-  * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter;  
-   if set to `"hex"`, it makes the output look like `"#abcdef"` instead of the default `"rgb(49, 128, 200)"`.
+  * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter.  
+   If set to `"hex"`, it makes the output look like `"#abcdef"` instead of the default `"rgb(49, 128, 200)"`.
 
 ## Planned for further releases
 * single constructor
