@@ -31,6 +31,7 @@ Contains following params:
 * `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 points.
   * All the **setters** and **tuners** respect channel constraints. So if you set _alpha to 2.5_ it will be actually set to _1_.
   * The **hue** channel is 360-degree-circular. So setting the _hue to -20_ makes it actually _340_ and setting it to _460_ makes it actually _100_.
+  * All the **setters** and **tuners** return the reference to the same instance so they are _chainable:_ `c1.set({a: .5}).tune.h(180)`.
 * `.clone()` &mdash; returns the new clone of the instance (not the reference).
 * `.toString()` &mdash; overrides the standard `Object.toString()` and returns the CSS-friendly value.
   * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter.  
@@ -38,9 +39,35 @@ Contains following params:
 * `.toRgb()`, `.toRgba()`, `.toHsl()`,`.toHsla()`. These converters are attached to the instance of color according to the type:
   * the instance of the RGB can be converted to the HSL and vice versa;
   * the instance of the RGBA can be converted to the HSLA and vice versa.
+  * **Pay attention,** while converting _RGB &rarr; HSL &rarr; RGB'_ you can detect that channels in `RGB` and `RGB'` vary a bit. That's ok due to necessity to round floats to integers and vice versa. Such delta does not affect how the color is recognized by the human eye.
+  * All the converters return the new instance of appropriate type.
+
+## Tips and tricks
+1. The **HSL** model is more human-friendly as the **RGB.**
+2. You can emulate human-friendly color behavior by converting the color to **HSL/HSLA** and using the `.tune()` method:
+```javascript
+var _original = new $color.rgb('#af8c63');
+var hsl = _original.toHsl();
+
+// pay attention, without `.clone()` you'll change the `hsl` instance!
+var _darker = hsl.clone().tune.l(-20);
+var _lighter = hsl.clone().tune.l(20);
+
+var _saturated = hsl.clone().tune.s(30);
+var _desaturated = hsl.clone().tune.s(-30);
+
+var _opposite = hsl.clone().tune.h(180);
+var _harmonical_01 = hsl.clone().tune.h(120); // or any other hue shift
+var _harmonical_02 = hsl.clone().tune.h(-120);
+
+var _totally_different = hsl.clone().tune({h: 30, s: 40}).set({l: 50}); // the sequence might continued
+
+# eventually get back to the RGB model:
+document.body.style.backgroundColor = _totally_different.toRgb().toString('hex'); // "#d5db24"
+```
 
 ## Demo
-Open the +./test/test.html+ for demonstrating the power of the library.
+Open the `./test/test.html` to check the power of the library.
 
 ## Planned for further releases
 * single constructor
