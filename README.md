@@ -1,4 +1,4 @@
-# color.js - the color managing library.
+# color.js v0.5.9 &mdash; the color managing library.
 Supports parsing and convenient handling of RGB(A) and HSL(A) color representations.
 
 ```javascript
@@ -35,10 +35,15 @@ Contains following params:
 * `.toString()` &mdash; overrides the standard `Object.toString()` and returns the CSS-friendly value.
   * For the `new $color.rgb()` constructor, the `.toString()` method supports one optional parameter.  
    If set to `"hex"`, it makes the output look like `"#abcdef"` instead of the default `"rgb(49, 128, 200)"`.
+* `.toRgb()`, `.toRgba()`, `.toHsl()`,`.toHsla()`. These converters are attached to the instance of color according to the type:
+  * the instance of the RGB can be converted to the HSL and vice versa;
+  * the instance of the RGBA can be converted to the HSLA and vice versa.
+
+## Demo
+Open the +./test/test.html+ for demonstrating the power of the library.
 
 ## Planned for further releases
 * single constructor
-* RGB-HSL-RGB converter
 
 ## Support
 IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.

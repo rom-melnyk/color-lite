@@ -6,9 +6,9 @@
 	 * @return {Object} 				same but `{h:..., s:..., l:...}`
 	 */
 	color.convert.rgb2hsl = function (rgb) {
-		var r = color.normalizeChannel('r', rgb.r),
-			g = color.normalizeChannel('g', rgb.g),
-			b = color.normalizeChannel('b', rgb.b),
+		var r = color.normalizeChannel('r', rgb.r) / 255,
+			g = color.normalizeChannel('g', rgb.g) / 255,
+			b = color.normalizeChannel('b', rgb.b) / 255,
 			max = Math.max(r, g, b),
 			min = Math.min(r, g, b),
 			delta = max - min,
@@ -27,10 +27,14 @@
 		}
 		hsl.h = Math.round(hsl.h * 60);
 
-		hsl.l = Math.round((max + min) / 2 / 255 * 100);
+		hsl.l = (max + min) / 2;
 
-		hsl.s = hsl.l === 0 ? 0 : Math.round(100 * delta / (1 - Math.abs(2 * hsl.l - 1)));
+		hsl.s = (hsl.l === 0 || hsl.l === 1)
+			? 0
+			: (delta / (1 - Math.abs(2 * hsl.l - 1)));
 
+		hsl.s = Math.round(100 * hsl.s);
+		hsl.l = Math.round(100 * hsl.l);
 		return hsl;
 	};
 
@@ -39,9 +43,9 @@
 	 * @return {Object} 				same but `{r:..., g:..., b:...}`
 	 */
 	color.convert.hsl2rgb = function (hsl) {
-		var h = color.normalizeChannel('h', rgb.h),
-			s = color.normalizeChannel('s', rgb.s) / 100,
-			l = color.normalizeChannel('l', rgb.l) / 100,
+		var h = color.normalizeChannel('h', hsl.h),
+			s = color.normalizeChannel('s', hsl.s) / 100,
+			l = color.normalizeChannel('l', hsl.l) / 100,
 			C = (1 - Math.abs(2 * l - 1)) * s,
 			X = C * (1 - Math.abs(h / 60 % 2 - 1)),
 			M = l - C/ 2,

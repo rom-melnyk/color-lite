@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Color.js test page</title>
-    <script type="text/javascript" src="../color.concat.js"></script>
-   <!--<script type="text/javascript" src="../color.min.js"></script>-->
+  <!--<script type="text/javascript" src="../color.concat.js"></script>-->
+  <script type="text/javascript" src="../color.min.js"></script>
   <style type="text/css">
     body {
       min-width: 800px;
@@ -66,6 +66,12 @@
     }
     input[disabled] {
       opacity: .5;
+    }
+
+    /* --------------- RGB / HSL conversion --------------- */
+    #rgb01, #hsl01, #rgb02 {
+      margin: 0 1em .3em;
+      padding: .3em 1em;
     }
   </style>
 </head>
@@ -135,6 +141,12 @@
     </div>
   </div>
 
+  <div class="container">
+    <h4>RGB / HSL conversion <i>(paragraphs must have similar background)</i></h4>
+    <div id="rgb01"></div>
+    <div id="hsl01"></div>
+    <div id="rgb02"></div>
+  </div>
   <script type="text/javascript">
     var colors = {
       c1: new $color.hsla(30, 40, 50),
@@ -230,10 +242,12 @@
     // initial background-color setting
     for (var key in colors) {
       if (colors.hasOwnProperty(key)) {
-        document.getElementById(key).style.backgroundColor = colors[key].toString();
-        document.getElementById(key).getElementsByTagName('span')[0].innerHTML = colors[key].toString();
+        document.querySelector('#' + key).style.backgroundColor = colors[key].toString();
+        document.querySelector('#' + key + ' span').innerHTML = colors[key].toString();
+        // document.getElementById(key)
+        // document.getElementById(key).getElementsByTagName('span')[0].innerHTML = colors[key].toString();
         if (colors[key].type === 'rgb') {
-          document.getElementById(key).getElementsByTagName('span')[0].innerHTML += ', ' + colors[key].toString('hex');
+          document.querySelector('#' + key + ' span').innerHTML += ', ' + colors[key].toString('hex');
         }
       }
     }
@@ -247,6 +261,25 @@
     [].slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {
       input.onchange = manageColorComponent;
     });
+
+    // --- RGB / HSL conversion ---
+    var rnd = function (from, to) {
+      if (to === undefined) {
+        to = from;
+        from = 0;
+      }
+      return Math.floor(Math.random() * (to - from) + from);
+    };
+
+    var __c1 = new $color.hsla(rnd(360), rnd(100), rnd(100), Math.random() * .7 + .3);
+    var __c2 = __c1.toRgba();
+    var __c3 = __c2.toHsla();
+    document.getElementById('rgb01').innerHTML = __c1.toString();
+    document.getElementById('rgb01').style.backgroundColor = __c1.toString();
+    document.getElementById('hsl01').innerHTML = __c2.toString();
+    document.getElementById('hsl01').style.backgroundColor = __c2.toString();
+    document.getElementById('rgb02').innerHTML = __c3.toString();
+    document.getElementById('rgb02').style.backgroundColor = __c3.toString();
   </script>
 </body>
 </html>

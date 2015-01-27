@@ -17,7 +17,7 @@
 			+ this.r + ', '
 			+ this.g + ', '
 			+ this.b + ', '
-			+ this.a + ')';
+			+ (this.a === 0 || this.a === 1 ? this.a : this.a.toFixed(2)) + ')';
 	};
 
 	/**
