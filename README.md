@@ -1,4 +1,4 @@
-# color.js v0.5.9 &mdash; the color managing library.
+# color.js v0.5.0 &mdash; the color managing library.
 Supports parsing and convenient handling of RGB(A) and HSL(A) color representations.
 
 ```javascript
