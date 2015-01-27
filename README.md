@@ -42,6 +42,12 @@ Contains following params:
   * **Pay attention,** while converting _RGB &rarr; HSL &rarr; RGB'_ you can detect that channels in `RGB` and `RGB'` vary a bit. That's ok due to necessity to round floats to integers and vice versa. Such delta does not affect how the color is recognized by the human eye.
   * All the converters return the new instance of appropriate type.
 
+## Utilities
+* `$color.convert.rgb2hsl()`: expect one parameter, the object like `{r: 190, g: 89, b: 20}` and returns the object like `{h: 24, l: 41, s: 81}`.
+* `$color.convert.hsl2rgb()` behaves in similar way.
+  * Channel values are normalized by these methods so passing `{r: "90", b: 30}` is equivalent to `{r: 90, g: 0, b: 30}`.
+* `$color.masks.rgb`, `$color.masks.rgba`, `$color.masks.hsl`, `$color.masks.hsla`, `$color.masks.rgbhex` contain regular expressions for parsing/testing the strings with color representations.
+
 ## Tips and tricks
 1. The **HSL** model is more human-friendly as the **RGB.**
 2. You can emulate human-friendly color behavior by converting the color to **HSL/HSLA** and using the `.tune()` method:
