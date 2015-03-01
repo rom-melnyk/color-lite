@@ -15,9 +15,9 @@
 	color.rgb.prototype.toString = function (hex) {
 		return (hex === 'hex')
 			? '#'
-				+ this.r.toString(16)
-				+ this.g.toString(16)
-				+ this.b.toString(16)
+				+ ('0' + this.r.toString(16)).substr(-2, 2)
+				+ ('0' + this.g.toString(16)).substr(-2, 2)
+				+ ('0' + this.b.toString(16)).substr(-2, 2)
 			: 'rgb('
 				+ this.r + ', '
 				+ this.g + ', '
