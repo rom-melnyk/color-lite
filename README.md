@@ -11,26 +11,30 @@ document.getElementById('myDiv').style.backgroundColor = c1.clone().tune({l: -20
 c3.set.a(.5).toString(); // "hsla(20, 35%, 90%, .5)"
 ```
 ## Constructor
-Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $color.hsla(...)` to create the color instance.
+Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $color.hsla(...)` to create the **color instance.**
 #### Parameters:
-* either the *object* with properties corresponding to each channel: `new $color({r: 100, g: 150, b: 300})`,
-* or the *string* representation: `new $color.rgba("rgba(200, 30, 21, 0.5)")`.  
-For your convenience, you can pass the _"rgba(...)"_ string into `$color.rgb()` constructor and vice versa; same for HSL/HSLA. In this case the missed _Alpha_ value will be set to _1_.
-  * Pay attention, the string must be correct so if you pass _"rgba(...)"_, we expect _4 arguments_ in parentheses!
+* either the `Object` with properties corresponding to each channel, for instance,  
+   `new $color({r: 100, g: 150, b: 300})`,
+* or the `String` representation:  
+   `new $color.rgba("rgba(200, 30, 21, 0.5)")`.  
+   For your convenience, you can pass the _"rgba(...)"_ string into `$color.rgb()` constructor and vice versa; same for HSL/HSLA. In this case the missed _Alpha_ value will be set to _1_.
+  * Pay attention, the CSS string must be correct. So if you pass _"rgba(...)"_, we expect _4 arguments_ in parentheses!
   * The `new $color.rgb()` constructor supports also _"#abcdef"_ and _"#abc"_ strings (case-insensitive).
   * Extra spaces in the string are ignored;
-* or the *sequence of numbers:* `new $color.hsl(180, 30, 75)`. Pay attention:
+* or the *sequence of Numbers:*  
+   `new $color.hsl(180, 30, 75)`.  
+   Mind following here:
   * _RGB_ values will be normalized to fit the range `0..255`;
   * any value of the _hue_ will be normalized to `0..359` respecting the "circle" (`-30` will be coverted to `330`; `400` will be converted to `40`);
-  * both _saturation_ and _lightbess_ must be in the range `0..100`, not `0..1`;
+  * both _saturation_ and _lightness_ must be in the range `0..100`, not `0..1`;
   * _alpha_ channel will normalized to fit the `0..1` range.
 
 ## The color instance
-Contains following params and methods:
+Uses following params and methods:
 * `.type` &mdash; means one of `"rgb"`, `"rgba"`, `"hsl"`, `"hsla"`.
 * per-channel properties (for instance, `.h`, `.s`, `.l` respecting the type).
-* `.set()` method. It expects the object (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
-  * You can pass only several channels into this methods, not always all ones: `.set({h: 30, a: .3})` is fine.
+* `.set()` method. It expects the `Object` (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
+  * Not all the channels are mandatory: `.set({h: 30, a: .3})` is fine.
 * `.set.h()`, `.set.s()`, `.set.l()` and so on according to color type. All these methods expect number.
 * `.tune()` and `.tune.<per-channel>()` methods. They act like setters but you pass **the delta** not the value: `c1.tune.l(-20)` decreases the _Lightness_ channel in 20 points.
   * All the **setters** and **tuners** respect channel constraints. So if you set _alpha to 2.5_ it will be actually set to _1_.
@@ -75,7 +79,7 @@ var _opposite = hsl.clone().tune.h(180);
 var _harmonical_01 = hsl.clone().tune.h(120); // or any other hue shift
 var _harmonical_02 = hsl.clone().tune.h(-120);
 
-var _totally_different = hsl.clone().tune({h: 30, s: 40}).set({l: 50}); // the sequence might continued
+var _totally_different = hsl.clone().tune({h: 30, s: 40}).set({l: 50}); // the sequence might be continued
 
 // eventually get back to the RGB model:
 document.body.style.backgroundColor = _totally_different.toRgb().toString('hex'); // "#d5db24"
@@ -86,6 +90,7 @@ Open the `./test/test.html` to check the power of the library.
 
 ## Planned for further releases
 * single constructor
+* NodeJS support
 
 ## Support
 IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.
