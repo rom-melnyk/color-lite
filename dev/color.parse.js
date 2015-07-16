@@ -77,7 +77,7 @@
 				ret[key] = color.normalizeChannel( key, parsedString[i++] );
 			});
 		} else {
-			var args = [].slice.call(arguments, 1);
+			var args = Array.prototype.slice.call(arguments, 1);
 			keys.forEach(function (key) {
 				ret[key] = color.normalizeChannel( key, args[i++] );
 			});

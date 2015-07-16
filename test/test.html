@@ -255,10 +255,10 @@
     // initial slider setting
     manageRadioSelector.call(document.querySelector('[name=color][checked=true]'));
 
-    [].slice.call(document.querySelectorAll('[name=color], [name=color]')).forEach(function (input) {
+    Array.prototype.slice.call(document.querySelectorAll('[name=color], [name=color]')).forEach(function (input) {
       input.onchange = manageRadioSelector;
     });
-    [].slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {
+    Array.prototype.slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {
       input.onchange = manageColorComponent;
     });
 

@@ -28,7 +28,7 @@
 			me.type = type;
 
 			// call the `$color.parse` with current arguments and the `type` argument preceding
-			var args = [].slice.call(arguments);
+			var args = Array.prototype.slice.call(arguments);
 			args.unshift(me.type);
 			channelValues = color.parse.apply(color, args);
 
