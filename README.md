@@ -1,4 +1,5 @@
-# color.js v0.5.0 &mdash; the color managing library.
+# color.js v0.6.0 &mdash; the color managing library.
+
 Supports parsing and convenient handling of RGB(A) and HSL(A) color representations.
 
 ```javascript
@@ -11,8 +12,11 @@ document.getElementById('myDiv').style.backgroundColor = c1.clone().tune({l: -20
 c3.set.a(.5).toString(); // "hsla(20, 35%, 90%, .5)"
 ```
 ## Constructor
+
 Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $color.hsla(...)` to create the **color instance.**
+
 #### Parameters:
+
 * either the `Object` with properties corresponding to each channel, for instance,  
    `new $color({r: 100, g: 150, b: 300})`,
 * or the `String` representation:  
@@ -21,7 +25,7 @@ Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $
   * Pay attention, the CSS string must be correct. So if you pass _"rgba(...)"_, we expect _4 arguments_ in parentheses!
   * The `new $color.rgb()` constructor supports also _"#abcdef"_ and _"#abc"_ strings (case-insensitive).
   * Extra spaces in the string are ignored;
-* or the *sequence of Numbers:*  
+* or the _sequence of Numbers:_  
    `new $color.hsl(180, 30, 75)`.  
    Mind following here:
   * _RGB_ values will be normalized to fit the range `0..255`;
@@ -30,7 +34,9 @@ Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $
   * _alpha_ channel will normalized to fit the `0..1` range.
 
 ## The color instance
+
 Uses following params and methods:
+
 * `.type` &mdash; means one of `"rgb"`, `"rgba"`, `"hsl"`, `"hsla"`.
 * per-channel properties (for instance, `.h`, `.s`, `.l` respecting the type).
 * `.set()` method. It expects the `Object` (like `{h: 30, s: 50, l: 90}`) and sets the channel values in proper way.
@@ -51,6 +57,7 @@ Uses following params and methods:
   * All the converters return the new instance of appropriate type.
 
 ## Utilities
+
 * `$color.convert.rgb2hsl()`: expect one parameter, the object like `{r: 190, g: 89, b: 20}` and returns the object like `{h: 24, l: 41, s: 81}`.
 * `$color.convert.hsl2rgb()` behaves in similar way.
   * Channel values are normalized by these methods so passing `{r: "90", b: 30}` is equivalent to `{r: 90, g: 0, b: 30}`.
@@ -62,6 +69,7 @@ $color.masks.rgbhex.test('#8c40'); // false
 ```
 
 ## Tips and tricks
+
 1. The **HSL** model is more human-friendly as the **RGB.**
 2. You can emulate human-friendly color behavior by converting the color to **HSL/HSLA** and using the `.tune()` method:
 ```javascript
@@ -86,14 +94,18 @@ document.body.style.backgroundColor = _totally_different.toRgb().toString('hex')
 ```
 
 ## Demo
+
 Open the `./test/test.html` to check the power of the library.
 
 ## Planned for further releases
+
 * single constructor
 * NodeJS support
 
 ## Support
+
 IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.
 
 ## Credits
+
 Roman Melnyk <email.rom.melnyk@gmail.com>
