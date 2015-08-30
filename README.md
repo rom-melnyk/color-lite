@@ -97,14 +97,22 @@ document.body.style.backgroundColor = _totally_different.toRgb().toString('hex')
 
 Open the `./test/test.html` to check the power of the library.
 
-## Planned for further releases
+## Development
 
-* single constructor
-* NodeJS support
+* we expect you to have the NodeJS. Do `npm install`;
+* `npm run dev` for development;
+* `npm run prod` to generate `color.min.js`;
+* use `color.min.js` in browser.
 
 ## Support
 
 IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.
+
+You can use the module with the NodeJS as well.
+
+* `npm install --save-dev git://github.com/rom-melnyk/color.js`;
+* `var Color = require('color-js')`.
+
 
 ## Credits
 
