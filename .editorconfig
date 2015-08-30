@@ -1,0 +1,11 @@
+root = true
+
+[*]
+insert_final_newline = true
+
+[*.js]
+indent_style = tab
+
+[{package.json}]
+indent_style = tab
+indent-size = 4
