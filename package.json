@@ -30,5 +30,10 @@
 	"devDependencies": {
 		"browserify": "^11.0.1",
 		"watchify": "^3.3.1"
+	},
+	"main": "src/color.js",
+	"scripts": {
+		"dev": "watchify src/color.js -o color.js -d -v",
+		"prod": "echo TODO!"
 	}
 }

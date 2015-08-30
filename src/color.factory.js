@@ -1,3 +1,6 @@
+var parse = require('./color.parse');
+var normalizeChannel = require('./color.normalize');
+
 /**
  * @factory
  * Creates the constructor for any type of the color: RGB(a), HSL(a).
@@ -28,7 +31,7 @@ var Factory = function (type) {
 		// call the `$color.parse` with current arguments and the `type` argument preceding
 		var args = Array.prototype.slice.call(arguments);
 		args.unshift(me.type);
-		channelValues = color.parse.apply(color, args);
+		channelValues = parse.apply(null, args);
 
 		var channelNames = me.type.split('');
 
@@ -79,12 +82,12 @@ var Factory = function (type) {
 			// setters and tuners for each channel
 			(function (_c) {
 				me.set[_c] = function (val) {
-					me[_c] = color.normalizeChannel(_c, val);
+					me[_c] = normalizeChannel(_c, val);
 					return me;
 				};
 				me.tune[_c] = function (val) {
 					if (typeof val === 'number') {
-						me[_c] = color.normalizeChannel(_c, me[_c] + val);
+						me[_c] = normalizeChannel(_c, me[_c] + val);
 					}
 					return me;
 				};
