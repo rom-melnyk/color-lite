@@ -33,7 +33,7 @@
 	},
 	"main": "src/color.js",
 	"scripts": {
-		"dev": "watchify src/color.js -o color.js -d -v",
+		"dev": "watchify src/color.js -o color.dev.js -d -v",
 		"prod": "echo TODO!"
 	}
 }

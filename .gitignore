@@ -38,4 +38,4 @@ node_modules/
 # --------------------
 # App Files
 # --------------------
-color.concat.js
+color.*.js
