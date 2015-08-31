@@ -29,7 +29,7 @@ Use `new $color.rgb(...)`, `new $color.rgba(...)`, `new $color.hsl(...)`, `new $
    `new $color.hsl(180, 30, 75)`.  
    Mind following here:
   * _RGB_ values will be normalized to fit the range `0..255`;
-  * any value of the _hue_ will be normalized to `0..359` respecting the "circle" (`-30` will be coverted to `330`; `400` will be converted to `40`);
+  * any value of the _hue_ will be normalized to `0..359` respecting the "circle" (`-30` will be converted to `330`; `400` will be converted to `40`);
   * both _saturation_ and _lightness_ must be in the range `0..100`, not `0..1`;
   * _alpha_ channel will normalized to fit the `0..1` range.
 
@@ -95,7 +95,7 @@ document.body.style.backgroundColor = _totally_different.toRgb().toString('hex')
 
 ## Demo
 
-Open the `./test/test.html` to check the power of the library.
+Open the `./demo/demo.html` to check the power of the library.
 
 ## Development
 
@@ -106,12 +106,13 @@ Open the `./test/test.html` to check the power of the library.
 
 ## Support
 
-IE8 is not supported at this moment (due to usage of `.forEach()` and `.infexOf()`). All the other modern browsers support this library well.
+The `color.min.js` could be included in your HTML. In this case `window.$color` becomes globally accessible utility object.  
+   **IE8 is not supported** due to usage of `.forEach()` and `.infexOf()`. All the other modern browsers support this library well.
 
 You can use the module with the NodeJS as well.
 
 * `npm install --save-dev git://github.com/rom-melnyk/color.js`;
-* `var Color = require('color-js')`.
+* `var $color = require('color-js')`.
 
 
 ## Credits
