@@ -107,7 +107,7 @@ Open the `./demo/demo.html` to check the power of the library.
 ## Support
 
 The `color.min.js` could be included in your HTML. In this case `window.$color` becomes globally accessible utility object.  
-   **IE8 is not supported** due to usage of `.forEach()` and `.infexOf()`. All the other modern browsers support this library well.
+   **IE8 is not supported** due to usage of `.forEach()` and `.indexOf()`. All the other modern browsers support this library well.
 
 You can use the module with the NodeJS as well.
 
