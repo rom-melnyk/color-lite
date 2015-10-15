@@ -18,7 +18,11 @@
     "opacity",
     "transparency"
   ],
-  "author": "Roman Melnyk <email.rom.melnyk@gmail.com>",
+  "author": {
+    "name": "Roman Melnyk",
+    "email": "email.rom.melnyk@gmail.com",
+    "url": "https://codedoc255.wordpress.com"
+  },
   "bugs": {
     "url": "https://github.com/rom-melnyk/color.js/issues",
     "email": "email.rom.melnyk@gmail.com"
