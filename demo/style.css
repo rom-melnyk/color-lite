@@ -9,12 +9,11 @@ h1, h4 {
     padding: 0.5em 0;
     text-align: center;
     font-weight: normal;
-    background-color: #fff;
     color: #777;
 }
 p {
     margin: 0 0 .5em 0;
-    padding: .5em 2em;
+    padding: 1em 2em;
 }
 p:last-child {
     margin-bottom: 0;
@@ -23,12 +22,54 @@ p:last-child {
 /* --------------- left / right panels, container --------------- */
 .container {
     margin: 1em 0 0;
+    padding: .5em;
+    background-color: #f4f4f4;
 }
 .container:after {
     display: block;
     content: " ";
     clear: both;
 }
+.container h4 {
+  cursor: pointer;
+  margin-right: -.5em;
+  margin-left: -.5em;
+  border-bottom: 2px solid #fff;
+}
+.container h4:hover {
+  color: #000;
+}
+.container h4:before {
+  content: '-';
+
+  display: inline-block;
+  width: 1.3em;
+  height: 1.3em;
+  margin-right: .5em;
+
+  font-size: 80%;
+  font-weight: bold;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 1.3em;
+
+  background-color: #ddd;
+  color: #fff;
+  border-radius: 50%;
+}
+.container h4:hover:before {
+  background-color: #777;
+}
+.container.collapsed h4 {
+  border-bottom: none;
+}
+.container.collapsed > div {
+  display: none;
+}
+.container.collapsed h4:before {
+  content: '+';
+}
+
 .left {
     width: 60%;
     float: left;
@@ -39,7 +80,6 @@ p:last-child {
     width: 30%;
     float: right;
     padding: .5em;
-    background-color: #fff;
 }
 
 /* --------------- paragraphs with colors --------------- */
@@ -70,10 +110,10 @@ p:last-child {
     font-size: 50%;
 }
 .right input {
-    width: 60%;
+    width: 65%;
 }
 input[disabled] {
-    opacity: .5;
+    opacity: .3;
 }
 
 /* --------------- RGB / HSL conversion --------------- */

@@ -1,3 +1,7 @@
+function _toArray (iterable) {
+	return Array.prototype.slice.call(iterable);
+}
+
 var colors = {
 	c1: new $color.hsla(30, 40, 50),
 	c2: new $color.hsla(230, 70, 30, .3),
@@ -9,7 +13,10 @@ var colors = {
 
 var selected = {};
 
-// this is the event handler; `this` means the <input type="radio">
+/**
+ * This is the event handler
+ * @this {HTMLElement} <input type="radio">
+ */
 function manageRadioSelector () {
 	var colKey;
 	selected.p = this.parentElement;
@@ -41,7 +48,10 @@ function manageRadioSelector () {
 	}
 }
 
-// this is the event handler; `this` means the <input type="range">
+/**
+ * This is the event handler
+ * @this {HTMLElement} <input type="range">
+ */
 function manageColorComponent () {
 	var val = +this.value;
 	var color;
@@ -105,15 +115,24 @@ for (var key in colors) {
 // initial slider setting
 manageRadioSelector.call(document.querySelector('[name=color][checked=true]'));
 
-Array.prototype.slice.call(document.querySelectorAll('[name=color], [name=color]')).forEach(function (input) {
+_toArray(document.querySelectorAll('[name=color]')).forEach(function (input) {
 	input.onchange = manageRadioSelector;
 });
-Array.prototype.slice.call(document.querySelectorAll('[type=range]')).forEach(function (input) {
+_toArray(document.querySelectorAll('[type=range]')).forEach(function (input) {
 	input.onchange = manageColorComponent;
 });
 
+_toArray(document.querySelectorAll('.container h4')).forEach(function (header) {
+	header.addEventListener('click', function () {
+		this.parentElement.className =
+			this.parentElement.className === 'container collapsed'
+			? 'container'
+			: 'container collapsed';
+	}, true);
+});
+
 // --- RGB / HSL conversion ---
-var rnd = function (from, to) {
+function _rnd (from, to) {
 	if (to === undefined) {
 		to = from;
 		from = 0;
@@ -121,7 +140,7 @@ var rnd = function (from, to) {
 	return Math.floor(Math.random() * (to - from) + from);
 };
 
-var __c1 = new $color.hsla(rnd(360), rnd(100), rnd(100), Math.random() * .7 + .3);
+var __c1 = new $color.hsla(_rnd(360), _rnd(100), _rnd(100), Math.random() * .7 + .3);
 var __c2 = __c1.toRgba();
 var __c3 = __c2.toHsla();
 document.getElementById('rgb01').innerHTML = __c1.toString();
