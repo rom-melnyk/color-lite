@@ -40,7 +40,7 @@ input {
     vertical-align: middle;
 }
 
-input[type=radio] {
+input[type=radio], input[type=checkbox] {
     width: 2em;
     height: 2em;
 }
