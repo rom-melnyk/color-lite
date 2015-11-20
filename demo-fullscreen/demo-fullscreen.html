@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RGB/HSL demo</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="../color.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body onload="onLoad();">
+    <div class="controls-area">
+        <div class="wrapper">
+            <div class="scheme-selector">
+                <input type="radio" name="color-scheme" value="rgb" checked="true"/>
+                <label>RGB</label>
+                <input type="radio" name="color-scheme" value="hsl"/>
+                <label>HSL</label>
+                <span></span>
+            </div>
+            <div class="sliders">
+                <div class="input-block">
+                    <label for="slider1"></label>
+                    <input id="slider1" type="range"/>
+                </div>
+
+                <div class="input-block">
+                    <label for="slider2"></label>
+                    <input id="slider2" type="range"/>
+                </div>
+
+                <div class="input-block">
+                    <label for="slider3"></label>
+                    <input id="slider" type="range"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
