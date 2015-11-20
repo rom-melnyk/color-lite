@@ -19,21 +19,30 @@ html, body {
     position: absolute;
     width: 100%;
     bottom: 0;
-    background: #eee;
+    background: #aaa;
 }
 
 .controls-area .wrapper {
     width: 80%;
-    margin: 1em auto;
+    margin: 1em auto 2em;
 }
 
 .input-block, .scheme-selector {
     margin-bottom: .5em;
 }
 
+.options {
+    margin-bottom: 1em;
+}
+
+.scheme-selector span {
+    font-family: monospace;
+}
+
 label {
     display: inline-block;
     width: 20%;
+    white-space: nowrap;
 }
 
 input {
@@ -43,6 +52,10 @@ input {
 input[type=radio], input[type=checkbox] {
     width: 2em;
     height: 2em;
+}
+
+input[type=radio], input[type=checkbox], .scheme-selector label, .options label {
+    cursor: pointer;
 }
 
 input[type=range] {

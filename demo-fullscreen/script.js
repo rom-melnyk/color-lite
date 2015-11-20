@@ -93,7 +93,6 @@ function setGreyColor (value) {
     channelInputs.forEach(function (inp) {
         inp.value = value;
     });
-    updateColor({r: value, g: value, b: value});
 }
 
 function onLoad () {
@@ -108,8 +107,9 @@ function onLoad () {
         input.addEventListener('change', function (e) {
             color = color.type === 'rgb' ? color.toHsl() : color.toRgb();
             updateControlsArea(color.type);
-            updateColor({});
             isGrayCheckbox.disabled = color.type === 'hsl';
+            updateColor({});
+            updateGradients();
         }, false);
     });
 
@@ -118,6 +118,7 @@ function onLoad () {
             var grey = Math.round((color.r + color.g + color.b) / 3)
             setGreyColor(grey);
         }
+        updateColor({});
         updateGradients();
     }, false);
 
@@ -127,8 +128,11 @@ function onLoad () {
 
     channelInputs.forEach(function (input) {
         input.addEventListener('change', function (e) {
+            var grey;
             if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
-                setGreyColor(+input.value);
+                grey = +input.value;
+                setGreyColor(grey);
+                updateColor({r: grey, g: grey, b: grey});
             } else {
                 updateColor( getChannelProps(input) );
             }
