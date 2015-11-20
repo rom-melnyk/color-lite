@@ -108,6 +108,9 @@ function onLoad () {
             color = color.type === 'rgb' ? color.toHsl() : color.toRgb();
             updateControlsArea(color.type);
             isGrayCheckbox.disabled = color.type === 'hsl';
+            if (color.type === 'hsl') {
+                isGrayCheckbox.checked = false;
+            }
             updateColor({});
             updateGradients();
         }, false);
