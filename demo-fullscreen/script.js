@@ -8,7 +8,7 @@ function QS1 (selector) {
 
 var colorModels,
     channelLabels, channelInputs, colorStringLabel,
-    isGrayCheckbox, showChannelHints,
+    isGrayCheckbox, showChannelHintsCheckbox,
     color;
 
 function prepareControls () {
@@ -16,12 +16,12 @@ function prepareControls () {
         rgb: [
             {label: 'Red', min: 0, max: 255, step: 5, channel: 'r'},
             {label: 'Green', min: 0, max: 255, step: 5, channel: 'g'},
-            {label: 'Blue', min: 0, max: 255, step: 5, channel: 'b'},
+            {label: 'Blue', min: 0, max: 255, step: 5, channel: 'b'}
         ],
         hsl: [
             {label: 'Hue', min: 0, max: 360, step: 10, channel: 'h'},
             {label: 'Saturation', min: 0, max: 100, step: 5, channel: 's'},
-            {label: 'Lightness', min: 0, max: 100, step: 5, channel: 'l'},
+            {label: 'Lightness', min: 0, max: 100, step: 5, channel: 'l'}
         ]
     };
 
@@ -29,7 +29,7 @@ function prepareControls () {
     channelInputs = QS('.sliders input');
     colorStringLabel = QS1('.scheme-selector span');
     isGrayCheckbox = QS1('#gray');
-    showChannelHints = QS1('#show-channel-hints');
+    showChannelHintsCheckbox = QS1('#show-channel-hints');
 }
 
 function updateSliders (model) {
@@ -64,7 +64,7 @@ function getChannelProps (input) {
 
 function getGradientValues (channel) {
     var values = [];
-    var clone, props, mutations;
+    var clone, props;
 
     if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
         values.push('#000', '#fff');
@@ -75,28 +75,28 @@ function getGradientValues (channel) {
     props = {};
 
     if (channel === 'h') {
-        mutations = [0, 60, 120, 180, 240, 300, 360];
+        values = [0, 60, 120, 180, 240, 300, 360];
     } else {
-        mutations = [0, 999];  // 999 is more than possible for any channel; will be truncated automatically
+        values = [0, 999];  // 999 is more than possible for any channel; will be truncated automatically
     }
 
-    mutations.forEach(function (v) {
+    values = values.map(function (v) {
         props[channel] = v;
-        values.push( clone.set(props).toString() );
+        return clone.set(props).toString();
     });
 
     return values;
 }
 
 function updateSliderGradients (force) {
-    if (!showChannelHints.checked && !force) {
+    if (!showChannelHintsCheckbox.checked && !force) {
         return;
     }
 
     channelInputs.forEach(function (input) {
         var gradientValues;
 
-        if (showChannelHints.checked) {
+        if (showChannelHintsCheckbox.checked) {
             gradientValues = getGradientValues( input.getAttribute('channel')).join(', ');
             input.parentElement.style.background = 'linear-gradient(to right, ' + gradientValues + ')';
             input.parentElement.style.backgroundRepeat = 'no-repeat';
@@ -150,7 +150,7 @@ function onLoad () {
     }, false);
 
     // --- [x] show color hints ---
-    showChannelHints.addEventListener('change', function () {
+    showChannelHintsCheckbox.addEventListener('change', function () {
         updateSliderGradients(true);
     }, false);
 
