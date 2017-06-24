@@ -40,6 +40,7 @@
   "main": "src/color.js",
   "scripts": {
     "dev": "watchify src/color.js -o color.dev.js -d -v",
-    "prod": "browserify src/color.js -o color.dev.js && uglifyjs color.dev.js --screw-ie8 -c -m -o color.min.js"
+    "prod": "browserify src/color.js -o color.dev.js && uglifyjs color.dev.js --screw-ie8 -c -m -o color.min.js",
+    "test": "mocha"
   }
 }

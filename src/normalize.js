@@ -19,7 +19,7 @@ function wrap(value, min, max, _default) {
         return _default;
     }
 
-    if (value <= min) {
+    if (value < min) {
         return max - (max - value) % max;
     }
 
@@ -36,7 +36,7 @@ module.exports = {
     g: v => normalize(v, 0, 255, 0),
     b: v => normalize(v, 0, 255, 0),
 
-    h: v => wrap(v, 0, 359, 0),
+    h: v => wrap(v, 0, 360, 0),
     s: v => normalize(v, 0, 100, 0),
     l: v => normalize(v, 0, 100, 0),
 
