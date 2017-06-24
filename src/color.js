@@ -1,11 +1,30 @@
-var Color = {};
-module.exports = Color;
+'use strict';
 
-Color.rgb = require('./color.rgb');
-Color.rgba = require('./color.rgba');
-Color.hsl = require('./color.hsl');
-Color.hsla = require('./color.hsla');
-Color.convert = require('./color.convert');
-Color.masks = require('./color.masks');
+const normalize = require('./normalize');
 
-if (window && !window.$color) { window.$color = Color; }
+class Color {
+    constructor() {
+        this._r = 0;
+        this._g = 0;
+        this._b = 0;
+
+        this._h = 0;
+        this._s = 0;
+        this._l = 0;
+
+        this._a = 0;
+    }
+
+
+    static normalize() {
+        return normalize;
+    }
+}
+
+if (window) {
+    window.Color = Color;
+}
+
+if (module) {
+    module.exports = Color;
+}
