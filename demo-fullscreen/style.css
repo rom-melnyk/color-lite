@@ -27,7 +27,7 @@ html, body {
     margin: 1em auto 2em;
 }
 
-.input-block, .scheme-selector {
+.input-block, .model-selector {
     margin-bottom: .5em;
 }
 
@@ -35,7 +35,7 @@ html, body {
     margin-bottom: 1em;
 }
 
-.scheme-selector span {
+.model-selector span {
     font-family: monospace;
 }
 
@@ -54,7 +54,7 @@ input[type=radio], input[type=checkbox] {
     height: 2em;
 }
 
-input[type=radio], input[type=checkbox], .scheme-selector label, .options label {
+input[type=radio], input[type=checkbox], .model-selector label, .options label {
     cursor: pointer;
 }
 

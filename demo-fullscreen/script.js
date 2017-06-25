@@ -1,54 +1,51 @@
-function QS (selector) {
-    return Array.prototype.slice.call(document.querySelectorAll(selector));
-}
-
-function QS1 (selector) {
-    return document.querySelector(selector);
-}
-
-var colorModels,
-    channelLabels, channelInputs, colorStringLabel,
+let colorModels,
+    colorModelRadio, colorStringLabel,
     isGrayCheckbox, showChannelHintsCheckbox,
+    channelLabels, channelInputs,
     color;
 
-function prepareControls () {
+
+function init() {
     colorModels = {
         rgb: [
-            {label: 'Red', min: 0, max: 255, step: 5, channel: 'r'},
-            {label: 'Green', min: 0, max: 255, step: 5, channel: 'g'},
-            {label: 'Blue', min: 0, max: 255, step: 5, channel: 'b'}
+            {label: 'Red',          min: 0,     max: 255,   step: 5,    channel: 'r'},
+            {label: 'Green',        min: 0,     max: 255,   step: 5,    channel: 'g'},
+            {label: 'Blue',         min: 0,     max: 255,   step: 5,    channel: 'b'}
         ],
         hsl: [
-            {label: 'Hue', min: 0, max: 360, step: 10, channel: 'h'},
-            {label: 'Saturation', min: 0, max: 100, step: 5, channel: 's'},
-            {label: 'Lightness', min: 0, max: 100, step: 5, channel: 'l'}
+            {label: 'Hue',          min: 0,     max: 360,   step: 10,   channel: 'h'},
+            {label: 'Saturation',   min: 0,     max: 100,   step: 5,    channel: 's'},
+            {label: 'Lightness',    min: 0,     max: 100,   step: 5,    channel: 'l'}
         ]
     };
 
-    channelLabels = QS('.sliders label');
-    channelInputs = QS('.sliders input');
-    colorStringLabel = QS1('.scheme-selector span');
-    isGrayCheckbox = QS1('#gray');
-    showChannelHintsCheckbox = QS1('#show-channel-hints');
+    colorModelRadio = [...document.querySelectorAll('input[name=color-model]')];
+    colorStringLabel = document.querySelector('.model-selector span');
+
+    isGrayCheckbox = document.querySelector('#gray');
+    showChannelHintsCheckbox = document.querySelector('#show-channel-hints');
+
+    channelLabels = [...document.querySelectorAll('.sliders label')];
+    channelInputs = [...document.querySelectorAll('.sliders input')];
 }
 
-function updateSliders (model) {
-    var i = 0;
-    colorModels[model].forEach(function (props) {
+
+function updateSliders(model) {
+    colorModels[model].forEach((props, i) => {
         channelLabels[i].innerHTML = props.label;
         channelInputs[i].setAttribute('min', props.min);
         channelInputs[i].setAttribute('max', props.max);
         channelInputs[i].setAttribute('step', props.step);
         channelInputs[i].setAttribute('channel', props.channel);
         channelInputs[i].value = color[props.channel];
-        i++;
     });
 }
 
-function updateColor (props) {
+
+function updateColor(props = {}) {
     color.set(props);
 
-    var bgColor = color.type === 'rgb'
+    let bgColor = color.type === 'rgb'
         ? color.toString('hex')
         : color.toRgb().toString('hex');
     document.body.style.backgroundColor = bgColor;
@@ -56,45 +53,38 @@ function updateColor (props) {
     colorStringLabel.innerHTML = color.toString() + (color.type === 'rgb' ? ', ' + bgColor : '');
 }
 
-function getChannelProps (input) {
-    var props = {};
-    props[ input.getAttribute('channel') ] = +input.value;
-    return props;
-}
 
-function getGradientValues (channel) {
-    var values = [];
-    var clone, props;
-
+function getGradientValues(channel) {
     if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
-        values.push('#000', '#fff');
-        return values;
+        return ['#000', '#fff'];
     }
 
-    clone = color.clone();
-    props = {};
+    let values;
+    const clone = color.clone();
 
     if (channel === 'h') {
         values = [0, 60, 120, 180, 240, 300, 360];
+    } else if (channel === 'l') {
+        values = [0, 50 ,100];
     } else {
         values = [0, 999];  // 999 is more than possible for any channel; will be truncated automatically
     }
 
     values = values.map(function (v) {
-        props[channel] = v;
-        return clone.set(props).toString();
+        return clone.set({ [channel]: v }).toString();
     });
 
     return values;
 }
 
-function updateSliderGradients (force) {
+
+function updateSliderGradients(force) {
     if (!showChannelHintsCheckbox.checked && !force) {
         return;
     }
 
     channelInputs.forEach(function (input) {
-        var gradientValues;
+        let gradientValues;
 
         if (showChannelHintsCheckbox.checked) {
             gradientValues = getGradientValues( input.getAttribute('channel')).join(', ');
@@ -108,62 +98,71 @@ function updateSliderGradients (force) {
     });
 }
 
-function setSlidersToGrey (value) {
+
+function setSlidersToGrey(value) {
     channelInputs.forEach(function (inp) {
         inp.value = value;
     });
 }
 
-function onLoad () {
-    prepareControls();
-    color = new $color.rgb(255, 255, 255);
+
+function onLoad() {
+    init();
+    color = new $color.rgb(
+        Math.round(Math.random() * 255),
+        Math.round(Math.random() * 255),
+        Math.round(Math.random() * 255)
+    );
 
     updateSliders(color.type);
-    updateColor({});
+    updateColor();
     updateSliderGradients();
 
+
     // --- (*) RGB    ( ) HSL ---
-    QS('input[name=color-scheme]').forEach(function (input) {
-        input.addEventListener('change', function (e) {
+    colorModelRadio.forEach(function (input) {
+        input.addEventListener('change', (e) => {
             color = color.type === 'rgb' ? color.toHsl() : color.toRgb();
             updateSliders(color.type);
             isGrayCheckbox.disabled = color.type === 'hsl';
             if (color.type === 'hsl') {
                 isGrayCheckbox.checked = false;
             }
-            updateColor({});
+            updateColor();
             updateSliderGradients();
         }, false);
     });
 
+
     // --- [x] grey ---
-    isGrayCheckbox.addEventListener('change', function () {
-        var grey;
+    isGrayCheckbox.addEventListener('change', () => {
         if (isGrayCheckbox.checked) {
-            grey = Math.round((color.r + color.g + color.b) / 3);
+            const grey = Math.round((color.r + color.g + color.b) / 3);
             setSlidersToGrey(grey);
             updateColor({r: grey, g: grey, b: grey});
         } else {
-            updateColor({});
+            updateColor();
         }
         updateSliderGradients();
     }, false);
 
-    // --- [x] show color hints ---
-    showChannelHintsCheckbox.addEventListener('change', function () {
+
+    // --- [x] show channel hints ---
+    showChannelHintsCheckbox.addEventListener('change', () => {
         updateSliderGradients(true);
     }, false);
 
+
     // Channel [ ---------||--- ]
-    channelInputs.forEach(function (input) {
-        input.addEventListener('change', function (e) {
-            var grey;
+    channelInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            const value = +input.value;
             if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
-                grey = +input.value;
-                setSlidersToGrey(grey);
-                updateColor({r: grey, g: grey, b: grey});
+                setSlidersToGrey(value);
+                updateColor({r: value, g: value, b: value});
             } else {
-                updateColor( getChannelProps(input) );
+                const channel = input.getAttribute('channel');
+                updateColor({ [channel]: value });
             }
             updateSliderGradients();
         }, false);
