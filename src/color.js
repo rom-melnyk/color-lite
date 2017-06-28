@@ -1,11 +1,12 @@
 'use strict';
 
 const normalize = require('./normalize');
+const { rgb2hsl, hsl2rgb } = require('./convert');
 
 class Color {
     constructor() {
-        Object.defineProperty(this, '_data', {configurable: false, enumerable: false});
-        Object.defineProperty(this, '_shouldConvert', {configurable: false, enumerable: false});
+        Object.defineProperty(this, '_data', { configurable: false, enumerable: false, value: {} });
+        Object.defineProperty(this, '_shouldConvert', { configurable: false, enumerable: false, writable: true });
         this._shouldConvert = false;
 
         if (_isSequence(arguments)) {
@@ -13,9 +14,26 @@ class Color {
             this.g = arguments[1];
             this.b = arguments[2];
             this.a = arguments[3];
-
+            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+        } else if (_isRgbObject(arguments)) {
+            this.r = arguments[0].r;
+            this.g = arguments[0].g;
+            this.b = arguments[0].b;
+            this.a = arguments[0].a;
+            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+        } else if (_isHslObject(arguments)) {
+            this.h = arguments[0].h;
+            this.s = arguments[0].s;
+            this.l = arguments[0].l;
+            this.a = arguments[0].a;
+            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
         }
         this._shouldConvert = true;
+
+        // TODO remove me after testing
+        console.log(`r: ${this.r}, g: ${this.g}, b: ${this.b}`);
+        console.log(`h: ${this.h}, s: ${this.s}, l: ${this.l}`);
+        console.log(`a: ${this.a}`);
     }
 
 
@@ -24,10 +42,22 @@ class Color {
     }
 
 
+    static rgb2hsl() {
+        return rgb2hsl;
+    }
+
+
+    static hsl2rgb() {
+        return hsl2rgb;
+    }
+
+
     // ---------------- RGB ----------------
     set r(v) {
         this._data._r = normalize.r(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+        }
     }
     get r() {
         return this._data._r;
@@ -35,7 +65,9 @@ class Color {
 
     set g(v) {
         this._data._g = normalize.g(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+        }
     }
     get g() {
         return this._data._g;
@@ -43,7 +75,9 @@ class Color {
 
     set b(v) {
         this._data._b = normalize.b(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+        }
     }
     get b() {
         return this._data._b;
@@ -53,7 +87,9 @@ class Color {
     // ---------------- HSL ----------------
     set h(v) {
         this._data._h = normalize.h(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+        }
     }
     get h() {
         return this._data._h;
@@ -61,7 +97,9 @@ class Color {
 
     set s(v) {
         this._data._s = normalize.s(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+        }
     }
     get s() {
         return this._data._s;
@@ -69,7 +107,9 @@ class Color {
 
     set l(v) {
         this._data._l = normalize.l(v);
-        if (this._shouldConvert) {___}
+        if (this._shouldConvert) {
+            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+        }
     }
     get l() {
         return this._data._l;
@@ -79,7 +119,6 @@ class Color {
     // ---------------- alpha ----------------
     set a(v) {
         this._data._a = normalize.a(v);
-        if (this._shouldConvert) {___}
     }
     get a() {
         return this._data._a;
@@ -92,7 +131,17 @@ function _isSequence(args) {
 }
 
 
-if (window) {
+function _isRgbObject(args) {
+    return args[0] && args[0].r !== undefined && args[0].g !== undefined && args[0].b !== undefined;
+}
+
+
+function _isHslObject(args) {
+    return args[0] && args[0].h !== undefined && args[0].s !== undefined && args[0].l !== undefined;
+}
+
+
+if (typeof window !== 'undefined') {
     window.Color = Color;
 }
 
