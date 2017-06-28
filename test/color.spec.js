@@ -42,5 +42,17 @@ describe('Color constructor', () => {
         color.set({ r: 0xa9, g: 0x87, b: 0x65 });
         assert.equal(color.toString(), '#a98765');
     });
+
+    it('should change HLS values when RGB channels were changed', () => {
+        const color = new Color({ r: 0, g: 1, b: 2 });
+        color.set({ r: 169, g: 34, b: 13 }); // http://www.rapidtables.com/convert/color/rgb-to-hsl.htm
+        assert.equal(color.toString(Color.HSL), 'hsl(8, 86%, 36%)');
+    });
+
+    it('should change RGB values when HSL channels were changed', () => {
+        const color = new Color({ r: 0, g: 1, b: 2 });
+        color.set({ h: 169, s: 34, l: 13 }); // http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
+        assert.equal(color.toString(Color.RGB), 'rgb(22, 44, 40)');
+    });
 });
 

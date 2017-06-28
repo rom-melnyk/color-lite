@@ -124,34 +124,22 @@ class Color {
 
         let wasChanged = false;
         this._shouldConvert = false;
-        if (channels.r !== undefined) {
-            this.r = channels.r;
-            wasChanged = true;
-        }
-        if (channels.g !== undefined) {
-            this.g = channels.g;
-            wasChanged = true;
-        }
-        if (channels.b !== undefined) {
-            this.b = channels.b;
-            wasChanged = true;
-        }
+        ['r', 'g', 'b'].forEach((ch) => {
+            if (channels[ch] !== undefined) {
+                this[ch] = channels[ch];
+                wasChanged = true;
+            }
+        });
 
         if (wasChanged) { // RGB channels were changed
             _assignHls(this);
         } else {
-            if (channels.h !== undefined) {
-                this.h = channels.h;
-                wasChanged = true;
-            }
-            if (channels.s !== undefined) {
-                this.s = channels.s;
-                wasChanged = true;
-            }
-            if (channels.l !== undefined) {
-                this.l = channels.l;
-                wasChanged = true;
-            }
+            ['h', 's', 'l'].forEach((ch) => {
+                if (channels[ch] !== undefined) {
+                    this[ch] = channels[ch];
+                    wasChanged = true;
+                }
+            });
 
             if (wasChanged) { // HSL channels were changed
                 _assignRgb(this);
@@ -240,6 +228,6 @@ if (typeof window !== 'undefined') {
     window.Color = Color;
 }
 
-if (module) {
+if (typeof module !== 'undefined') {
     module.exports = Color;
 }
