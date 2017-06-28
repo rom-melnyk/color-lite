@@ -7,33 +7,26 @@ class Color {
     constructor() {
         Object.defineProperty(this, '_data', { configurable: false, enumerable: false, value: {} });
         Object.defineProperty(this, '_shouldConvert', { configurable: false, enumerable: false, writable: true });
-        this._shouldConvert = false;
 
         if (_isSequence(arguments)) {
-            this.r = arguments[0];
-            this.g = arguments[1];
-            this.b = arguments[2];
-            this.a = arguments[3];
-            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+            [ this.r, this.g, this.b, this.a ] = arguments;
+            _assignHls(this);
         } else if (_isRgbObject(arguments)) {
-            this.r = arguments[0].r;
-            this.g = arguments[0].g;
-            this.b = arguments[0].b;
-            this.a = arguments[0].a;
-            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+            _assignRgb(this, arguments[0]);
+            _assignHls(this);
         } else if (_isHslObject(arguments)) {
-            this.h = arguments[0].h;
-            this.s = arguments[0].s;
-            this.l = arguments[0].l;
-            this.a = arguments[0].a;
-            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+            _assignHls(this, arguments[0]);
+            _assignRgb(this);
+        } else {
+            [ this.r, this.g, this.b, this.a ] = [ 0, 0, 0, 1 ];
+            _assignHls(this);
         }
         this._shouldConvert = true;
 
         // TODO remove me after testing
-        console.log(`r: ${this.r}, g: ${this.g}, b: ${this.b}`);
-        console.log(`h: ${this.h}, s: ${this.s}, l: ${this.l}`);
-        console.log(`a: ${this.a}`);
+        // console.log(`r: ${this.r}, g: ${this.g}, b: ${this.b}`);
+        // console.log(`h: ${this.h}, s: ${this.s}, l: ${this.l}`);
+        // console.log(`a: ${this.a}`);
     }
 
 
@@ -51,7 +44,7 @@ class Color {
     set r(v) {
         this._data._r = normalize.r(v);
         if (this._shouldConvert) {
-            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+            _assignHls(this);
         }
     }
     get r() {
@@ -61,7 +54,7 @@ class Color {
     set g(v) {
         this._data._g = normalize.g(v);
         if (this._shouldConvert) {
-            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+            _assignHls(this);
         }
     }
     get g() {
@@ -71,7 +64,7 @@ class Color {
     set b(v) {
         this._data._b = normalize.b(v);
         if (this._shouldConvert) {
-            ({ h: this.h, s: this.s, l: this.l } = rgb2hsl(this));
+            _assignHls(this);
         }
     }
     get b() {
@@ -83,7 +76,7 @@ class Color {
     set h(v) {
         this._data._h = normalize.h(v);
         if (this._shouldConvert) {
-            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+            _assignRgb(this);
         }
     }
     get h() {
@@ -93,7 +86,7 @@ class Color {
     set s(v) {
         this._data._s = normalize.s(v);
         if (this._shouldConvert) {
-            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+            _assignRgb(this);
         }
     }
     get s() {
@@ -103,7 +96,7 @@ class Color {
     set l(v) {
         this._data._l = normalize.l(v);
         if (this._shouldConvert) {
-            ({ r: this.r, g: this.g, b: this.b } = hsl2rgb(this));
+            _assignRgb(this);
         }
     }
     get l() {
@@ -117,6 +110,67 @@ class Color {
     }
     get a() {
         return this._data._a;
+    }
+
+
+    set(channels) {
+        if (!channels) {
+            return this;
+        }
+
+        if (channels.a !== undefined) { // alpha channel; does not affect neither RGB not HSL
+            this.a = channels.a;
+        }
+
+        let wasChanged = false;
+        this._shouldConvert = false;
+        if (channels.r !== undefined) {
+            this.r = channels.r;
+            wasChanged = true;
+        }
+        if (channels.g !== undefined) {
+            this.g = channels.g;
+            wasChanged = true;
+        }
+        if (channels.b !== undefined) {
+            this.b = channels.b;
+            wasChanged = true;
+        }
+
+        if (wasChanged) { // RGB channels were changed
+            _assignHls(this);
+        } else {
+            if (channels.h !== undefined) {
+                this.h = channels.h;
+                wasChanged = true;
+            }
+            if (channels.s !== undefined) {
+                this.s = channels.s;
+                wasChanged = true;
+            }
+            if (channels.l !== undefined) {
+                this.l = channels.l;
+                wasChanged = true;
+            }
+
+            if (wasChanged) { // HSL channels were changed
+                _assignRgb(this);
+            }
+        }
+
+        this._shouldConvert = true;
+        return this;
+    }
+
+
+    tune(channels) {
+        // TODO
+    }
+
+
+
+    clone() {
+        return new Color(this);
     }
 
 
@@ -153,7 +207,32 @@ function _isHslObject(args) {
 
 
 function _hex(channel) {
-    return ('0' + channel.toString(16)).substr(-2, 2);
+    const hex = channel.toString(16);
+    return hex.length === 2 ? hex : `0${hex}`;
+}
+
+
+function _assignRgb(instance, values) {
+    const prevShouldConvert = instance._shouldConvert;
+    instance._shouldConvert = false;
+    if (values) {
+        ({ r: instance.r, g: instance.g, b: instance.b, a: instance.a } = values);
+    } else {
+        ({ r: instance.r, g: instance.g, b: instance.b } = hsl2rgb(instance));
+    }
+    instance._shouldConvert = prevShouldConvert;
+}
+
+
+function _assignHls(instance, values) {
+    const prevShouldConvert = instance._shouldConvert;
+    instance._shouldConvert = false;
+    if (values) {
+        ({ h: instance.h, s: instance.s, l: instance.l, a: instance.a } = values);
+    } else {
+        ({ h: instance.h, s: instance.s, l: instance.l } = rgb2hsl(instance));
+    }
+    instance._shouldConvert = prevShouldConvert;
 }
 
 

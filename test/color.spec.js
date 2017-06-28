@@ -7,6 +7,9 @@ describe('Color constructor', () => {
 
     it('should create Color instance from sequence of numbers', () => {
         const color = new Color(0xaa, 0x88, 0x33);
+        // r: 170, g: 136, b: 51
+        // h: 43, s: 54, l: 43
+        // a: 1
         assert(color.r, 0xaa);
         assert(color.g, 0x88);
         assert(color.b, 0x33);
@@ -25,6 +28,19 @@ describe('Color constructor', () => {
         assert(color.r, 0xaa);
         assert(color.g, 0x88);
         assert(color.b, 0x33);
+    });
+
+    it('should change color when RGB channels were changed (one by one)', () => {
+        const color = new Color({ r: 12, g: 8, b: 0x33 });
+        color.r = 0xbb;
+        color.g = 0xff;
+        assert.equal(color.toString(), '#bbff33');
+    });
+
+    it('should change color when RGB channels were changed (bundle)', () => {
+        const color = new Color({ r: 255, g: 255, b: 13 });
+        color.set({ r: 0xa9, g: 0x87, b: 0x65 });
+        assert.equal(color.toString(), '#a98765');
     });
 });
 
