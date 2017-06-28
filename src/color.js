@@ -37,19 +37,14 @@ class Color {
     }
 
 
-    static normalize() {
-        return normalize;
-    }
-
-
-    static rgb2hsl() {
-        return rgb2hsl;
-    }
-
-
-    static hsl2rgb() {
-        return hsl2rgb;
-    }
+    static normalize() { return normalize; }
+    static rgb2hsl() { return rgb2hsl; }
+    static hsl2rgb() { return hsl2rgb; }
+    static RGB() { return 'rgb'; }
+    static RGBA() { return 'rgba'; }
+    static RGB_HEX() { return 'rgb_hex'; }
+    static HSL() { return 'hsl'; }
+    static HSLA() { return 'hsla'; }
 
 
     // ---------------- RGB ----------------
@@ -123,6 +118,22 @@ class Color {
     get a() {
         return this._data._a;
     }
+
+
+    toString(type) {
+        switch (type) {
+            case Color.RGB:
+                return `rgb(${this.r}, ${this.g}, ${this.b})`;
+            case Color.RGBA:
+                return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+            case Color.HSL:
+                return `hsl(${this.h}, ${this.s}%, ${this.l}%)`;
+            case Color.HSLA:
+                return `hsla(${this.h}, ${this.s}%, ${this.l}%, ${this.a})`;
+            default:
+                return `#${_hex(this.r)}${_hex(this.g)}${_hex(this.b)}`;
+        }
+    }
 }
 
 
@@ -138,6 +149,11 @@ function _isRgbObject(args) {
 
 function _isHslObject(args) {
     return args[0] && args[0].h !== undefined && args[0].s !== undefined && args[0].l !== undefined;
+}
+
+
+function _hex(channel) {
+    return ('0' + channel.toString(16)).substr(-2, 2);
 }
 
 
