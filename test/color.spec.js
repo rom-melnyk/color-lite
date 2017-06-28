@@ -54,5 +54,25 @@ describe('Color constructor', () => {
         color.set({ h: 169, s: 34, l: 13 }); // http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
         assert.equal(color.toString(Color.RGB), 'rgb(22, 44, 40)');
     });
+
+    it('clones', () => {
+        const color = new Color(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.random());
+        const clone = color.clone();
+        assert(color !== clone);
+        assert.deepStrictEqual(color, clone);
+        assert(color.toString(Color.HSLA) === clone.toString(Color.HSLA));
+    });
+
+    it('should tune RGB respecting constraints', () => {
+        const color = new Color(15, 100, 35);
+        color.tune({ r: -55, g: -30, b: 35 });
+        assert.equal(color.toString(Color.RGB), 'rgb(0, 70, 70)');
+    });
+
+    it('should tune HSL respecting constraints', () => {
+        const color = new Color({ h: 60, s: 50, l: 90 });
+        color.tune({ h: 500, s: -30, l: 5 });
+        assert.equal(color.toString(Color.HSL), 'hsl(200, 20%, 95%)');
+    });
 });
 

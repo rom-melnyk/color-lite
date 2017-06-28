@@ -6,7 +6,7 @@ const { rgb2hsl, hsl2rgb } = require('./convert');
 class Color {
     constructor() {
         Object.defineProperty(this, '_data', { configurable: false, enumerable: false, value: {} });
-        Object.defineProperty(this, '_shouldConvert', { configurable: false, enumerable: false, writable: true });
+        Object.defineProperty(this, '_shouldUpdate', { configurable: false, enumerable: false, writable: true });
 
         if (_isSequence(arguments)) {
             [ this.r, this.g, this.b, this.a ] = arguments;
@@ -21,7 +21,7 @@ class Color {
             [ this.r, this.g, this.b, this.a ] = [ 0, 0, 0, 1 ];
             _assignHls(this);
         }
-        this._shouldConvert = true;
+        this._shouldUpdate = true;
 
         // TODO remove me after testing
         // console.log(`r: ${this.r}, g: ${this.g}, b: ${this.b}`);
@@ -43,7 +43,7 @@ class Color {
     // ---------------- RGB ----------------
     set r(v) {
         this._data._r = normalize.r(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignHls(this);
         }
     }
@@ -53,7 +53,7 @@ class Color {
 
     set g(v) {
         this._data._g = normalize.g(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignHls(this);
         }
     }
@@ -63,7 +63,7 @@ class Color {
 
     set b(v) {
         this._data._b = normalize.b(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignHls(this);
         }
     }
@@ -75,7 +75,7 @@ class Color {
     // ---------------- HSL ----------------
     set h(v) {
         this._data._h = normalize.h(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignRgb(this);
         }
     }
@@ -85,7 +85,7 @@ class Color {
 
     set s(v) {
         this._data._s = normalize.s(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignRgb(this);
         }
     }
@@ -95,7 +95,7 @@ class Color {
 
     set l(v) {
         this._data._l = normalize.l(v);
-        if (this._shouldConvert) {
+        if (this._shouldUpdate) {
             _assignRgb(this);
         }
     }
@@ -123,7 +123,7 @@ class Color {
         }
 
         let wasChanged = false;
-        this._shouldConvert = false;
+        this._shouldUpdate = false;
         ['r', 'g', 'b'].forEach((ch) => {
             if (channels[ch] !== undefined) {
                 this[ch] = channels[ch];
@@ -146,13 +146,25 @@ class Color {
             }
         }
 
-        this._shouldConvert = true;
+        this._shouldUpdate = true;
         return this;
     }
 
 
     tune(channels) {
-        // TODO
+        if (!channels) {
+            return this;
+        }
+
+        const params = ['r', 'g', 'b', 'a', 'h', 's', 'l'].reduce((params, ch) => {
+            const delta = +channels[ch];
+            if (!isNaN(delta)) {
+                params[ch] = this[ch] + delta;
+            }
+            return params;
+        }, {});
+
+        return this.set(params);
     }
 
 
@@ -172,7 +184,7 @@ class Color {
                 return `hsl(${this.h}, ${this.s}%, ${this.l}%)`;
             case Color.HSLA:
                 return `hsla(${this.h}, ${this.s}%, ${this.l}%, ${this.a})`;
-            default:
+            default: // Color.RGB_HEX
                 return `#${_hex(this.r)}${_hex(this.g)}${_hex(this.b)}`;
         }
     }
@@ -201,26 +213,26 @@ function _hex(channel) {
 
 
 function _assignRgb(instance, values) {
-    const prevShouldConvert = instance._shouldConvert;
-    instance._shouldConvert = false;
+    const prevShouldConvert = instance._shouldUpdate;
+    instance._shouldUpdate = false;
     if (values) {
         ({ r: instance.r, g: instance.g, b: instance.b, a: instance.a } = values);
     } else {
         ({ r: instance.r, g: instance.g, b: instance.b } = hsl2rgb(instance));
     }
-    instance._shouldConvert = prevShouldConvert;
+    instance._shouldUpdate = prevShouldConvert;
 }
 
 
 function _assignHls(instance, values) {
-    const prevShouldConvert = instance._shouldConvert;
-    instance._shouldConvert = false;
+    const prevShouldConvert = instance._shouldUpdate;
+    instance._shouldUpdate = false;
     if (values) {
         ({ h: instance.h, s: instance.s, l: instance.l, a: instance.a } = values);
     } else {
         ({ h: instance.h, s: instance.s, l: instance.l } = rgb2hsl(instance));
     }
-    instance._shouldConvert = prevShouldConvert;
+    instance._shouldUpdate = prevShouldConvert;
 }
 
 
