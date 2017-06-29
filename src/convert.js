@@ -1,6 +1,11 @@
 'use strict';
 
-
+/**
+ * Converts RGB color to HSL.
+ * http://www.rapidtables.com/convert/color/rgb-to-hsl.htm
+ * @param {{r: number, g: number, b: number}} channels
+ * @return {{h: number, s: number, l: number}}
+ */
 function rgb2hsl({r, g, b}) {
     r = r / 255;
     g = g / 255;
@@ -37,6 +42,12 @@ function rgb2hsl({r, g, b}) {
 }
 
 
+/**
+ * Converts HSL color to RGB.
+ * http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
+ * @param {{h: number, s: number, l: number}} channels
+ * @return {{r: number, g: number, b: number}}
+ */
 function hsl2rgb({h, s, l}) {
      s = s / 100;
      l = l / 100;
@@ -65,6 +76,7 @@ function hsl2rgb({h, s, l}) {
 
     return rgb;
 }
+
 
 module.exports = {
     rgb2hsl,

@@ -1,10 +1,10 @@
+'use strict';
+
 const assert = require('assert');
 
 const Color = require('../src/color');
 
 describe('Color .toString()', () => {
-    'use strict';
-
     const color = new Color(0xaa, 0x88, 0x33, .45);
 
     it('should generate proper string representation via .toString(RGB)', () => {

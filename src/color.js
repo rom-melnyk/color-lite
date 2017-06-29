@@ -3,6 +3,11 @@
 const normalize = require('./normalize');
 const { rgb2hsl, hsl2rgb } = require('./convert');
 
+const RGB_CHANNELS = ['r', 'g', 'b'];
+const HSL_CHANNELS = ['h', 's', 'l'];
+const ALL_CHANNELS = ['r', 'g', 'b', 'a', 'h', 's', 'l'];
+
+
 class Color {
     constructor() {
         Object.defineProperty(this, '_data', { configurable: false, enumerable: false, value: {} });
@@ -113,6 +118,11 @@ class Color {
     }
 
 
+    /**
+     * Set the channel values.
+     * @param {{r: [number], g: [number], b: [number], h: [number], s: [number], l: [number], a: [number]}} channels
+     * @return {Color}
+     */
     set(channels) {
         if (!channels) {
             return this;
@@ -122,26 +132,26 @@ class Color {
             this.a = channels.a;
         }
 
-        let wasChanged = false;
+        let shouldChange = false;
         this._shouldUpdate = false;
-        ['r', 'g', 'b'].forEach((ch) => {
+        RGB_CHANNELS.forEach((ch) => {
             if (channels[ch] !== undefined) {
                 this[ch] = channels[ch];
-                wasChanged = true;
+                shouldChange = true;
             }
         });
 
-        if (wasChanged) { // RGB channels were changed
+        if (shouldChange) { // RGB channels were changed
             _assignHls(this);
         } else {
-            ['h', 's', 'l'].forEach((ch) => {
+            HSL_CHANNELS.forEach((ch) => {
                 if (channels[ch] !== undefined) {
                     this[ch] = channels[ch];
-                    wasChanged = true;
+                    shouldChange = true;
                 }
             });
 
-            if (wasChanged) { // HSL channels were changed
+            if (shouldChange) { // HSL channels were changed
                 _assignRgb(this);
             }
         }
@@ -151,12 +161,17 @@ class Color {
     }
 
 
+    /**
+     * Change the channel values by provided delta.
+     * @param {{r: [number], g: [number], b: [number], h: [number], s: [number], l: [number], a: [number]}} channels
+     * @return {Color}
+     */
     tune(channels) {
         if (!channels) {
             return this;
         }
 
-        const params = ['r', 'g', 'b', 'a', 'h', 's', 'l'].reduce((params, ch) => {
+        const params = ALL_CHANNELS.reduce((params, ch) => {
             const delta = +channels[ch];
             if (!isNaN(delta)) {
                 params[ch] = this[ch] + delta;
@@ -185,7 +200,7 @@ class Color {
             case Color.HSLA:
                 return `hsla(${this.h}, ${this.s}%, ${this.l}%, ${this.a})`;
             default: // Color.RGB_HEX
-                return `#${_hex(this.r)}${_hex(this.g)}${_hex(this.b)}`;
+                return `#${_toHex(this.r)}${_toHex(this.g)}${_toHex(this.b)}`;
         }
     }
 }
@@ -197,16 +212,16 @@ function _isSequence(args) {
 
 
 function _isRgbObject(args) {
-    return args[0] && args[0].r !== undefined && args[0].g !== undefined && args[0].b !== undefined;
+    return typeof args[0] === 'object' && RGB_CHANNELS.some(ch => args[0][ch] !== undefined);
 }
 
 
 function _isHslObject(args) {
-    return args[0] && args[0].h !== undefined && args[0].s !== undefined && args[0].l !== undefined;
+    return typeof args[0] === 'object' && HSL_CHANNELS.some(ch => args[0][ch] !== undefined);
 }
 
 
-function _hex(channel) {
+function _toHex(channel) {
     const hex = channel.toString(16);
     return hex.length === 2 ? hex : `0${hex}`;
 }

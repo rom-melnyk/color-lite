@@ -1,11 +1,10 @@
+'use strict';
+
 const assert = require('assert');
 
 const normalize = require('../src/normalize');
 
 describe('normalize', () => {
-    'use strict';
-
-
     ['red', 'green', 'blue'].forEach((channel) => {
         const method = channel.substr(0, 1);
         describe(channel, () => {
