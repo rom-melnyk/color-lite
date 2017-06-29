@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-
 const Color = require('../src/color');
+
 
 describe('Color constructor', () => {
     it('should create Color instance from sequence of numbers', () => {

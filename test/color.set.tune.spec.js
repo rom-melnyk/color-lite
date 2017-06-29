@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-
 const Color = require('../src/color');
+
 
 describe('Color .set()', () => {
     it('should change color when RGB channels were changed (one by one)', () => {
