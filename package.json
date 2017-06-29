@@ -34,6 +34,7 @@
   "devDependencies": {
     "browserify": "^14.4.0",
     "mocha": "^3.4.2",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony",
     "uglify-js": "^3.0.19",
     "watchify": "^3.9.0"
   },
