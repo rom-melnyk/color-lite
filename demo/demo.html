@@ -1,85 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Color.js test page</title>
-  <!--<script type="text/javascript" src="../color.dev.js"></script>-->
-  <script type="text/javascript" src="../color.min.js"></script>
-  <!--<link rel="stylesheet" href="./style.css"/>-->
-	<link rel="stylesheet" href="style.css"/>
+    <title>RGB/HSL demo</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="../color.dev.js"></script>
+    <!--<script type="text/javascript" src="../color.min.js"></script>-->
+    <script type="text/javascript" src="script.js"></script>
 </head>
-<body>
-  <h1>The <b>color.js</b> demo page</h1>
-  <div class="container collapsed">
-    <h4>The HSLA model</h4>
-    <div class="left">
-      <p id="c1">
-        <input type="radio" name="color" checked="true"/>
-        <span></span>
-      </p>
-      <p id="c2">
-        <input type="radio" name="color"/>
-        <span></span>
-      </p>
-      <p id="c3">
-        <input type="radio" name="color"/>
-        <span></span>
-      </p>
-    </div>
-    <div class="right">
-      <label for="hue">Hue</label>
-      <input id="hue" type="range" min="0" max="360" step="10"/>
-      <br/>
-      <label for="saturation">Saturation</label>
-      <input id="saturation" type="range" min="0" max="100" step="5"/>
-      <br/>
-      <label for="lightness">Lightness</label>
-      <input id="lightness" type="range" min="0" max="100" step="5"/>
-      <br/>
-      <label for="hsl-alpha">Alpha</label>
-      <input id="hsl-alpha" type="range" min="0" max="1" step=".05"/>
-      <br/>
-    </div>
-  </div>
+<body onload="onLoad();">
+    <div class="controls-area">
+        <div class="wrapper">
+            <div class="model-selector">
+                <input id="rgb" type="radio" name="color-model" value="rgb" checked="true"/>
+                <label for="rgb">RGB</label>
+                <input id="hsl" type="radio" name="color-model" value="hsl"/>
+                <label for="hsl">HSL</label>
+                <span></span>
+                <div class="options">
+                    <input id="gray" type="checkbox"/>
+                    <label for="gray">gray</label>
+                    <input id="show-channel-hints" type="checkbox"/>
+                    <label for="show-channel-hints">show channel hints</label>
+                </div>
+            </div>
+            <div class="sliders">
+                <div class="input-block">
+                    <label for="slider1"></label>
+                    <input id="slider1" type="range"/>
+                </div>
 
-  <div class="container collapsed">
-    <h4>The RGBA model</h4>
-    <div class="left">
-      <p id="c4">
-        <input type="radio" name="color"/>
-        <span></span>
-      </p>
-      <p id="c5">
-        <input type="radio" name="color"/>
-        <span></span>
-      </p>
-      <p id="c6">
-        <input type="radio" name="color"/>
-        <span></span>
-      </p>
-    </div>
-    <div class="right">
-      <label for="red">Red</label>
-      <input id="red" type="range" min="0" max="255" step="5"/>
-      <br/>
-      <label for="green">Green</label>
-      <input id="green" type="range" min="0" max="255" step="5"/>
-      <br/>
-      <label for="blue">Blue</label>
-      <input id="blue" type="range" min="0" max="255" step="5"/>
-      <br/>
-      <label for="rgb-alpha">Alpha</label>
-      <input id="rgb-alpha" type="range" min="0" max="1" step=".05"/>
-      <br/>
-    </div>
-  </div>
+                <div class="input-block">
+                    <label for="slider2"></label>
+                    <input id="slider2" type="range"/>
+                </div>
 
-  <div class="container collapsed">
-    <h4>RGB / HSL conversion <i>(paragraphs must have similar background)</i></h4>
-    <div id="rgb01"></div>
-    <div id="hsl01"></div>
-    <div id="rgb02"></div>
-  </div>
-  <script type="text/javascript" src="./script.js">
-  </script>
+                <div class="input-block">
+                    <label for="slider3"></label>
+                    <input id="slider3" type="range"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -38,11 +38,11 @@ class Color {
     static normalize() { return normalize; }
     static rgb2hsl() { return rgb2hsl; }
     static hsl2rgb() { return hsl2rgb; }
-    static RGB() { return 'rgb'; }
-    static RGBA() { return 'rgba'; }
-    static RGB_HEX() { return 'rgb_hex'; }
-    static HSL() { return 'hsl'; }
-    static HSLA() { return 'hsla'; }
+    static get RGB() { return 'rgb'; }
+    static get RGBA() { return 'rgba'; }
+    static get RGB_HEX() { return 'rgb_hex'; }
+    static get HSL() { return 'hsl'; }
+    static get HSLA() { return 'hsla'; }
 
 
     // ---------------- RGB ----------------
@@ -185,7 +185,13 @@ class Color {
 
 
     clone() {
-        return new Color(this);
+        const clone = new Color(this);
+        if (this.s === 0) {
+            // hue is considered as 0 (always red) for any of gray colors (s === 0)
+            // changing the hue for gray does not change the perception but changes color possibilities
+            clone.h = this.h;
+        }
+        return clone;
     }
 
 

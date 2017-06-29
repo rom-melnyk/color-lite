@@ -1,151 +1,184 @@
-function _toArray (iterable) {
-	return Array.prototype.slice.call(iterable);
+'use strict';
+
+let colorModels;
+let colorModel;
+let color;
+
+// HTML elements
+let colorModelRadios;
+let colorStringLabel;
+
+let isGrayCheckbox;
+let showChannelHintsCheckbox;
+
+let channelLabels;
+let channelInputs;
+
+
+function init() {
+    colorModels = {
+        rgb: [
+            {label: 'Red',          min: 0,     max: 255,   step: 5,    channel: 'r'},
+            {label: 'Green',        min: 0,     max: 255,   step: 5,    channel: 'g'},
+            {label: 'Blue',         min: 0,     max: 255,   step: 5,    channel: 'b'}
+        ],
+        hsl: [
+            {label: 'Hue',          min: 0,     max: 360,   step: 10,   channel: 'h'},
+            {label: 'Saturation',   min: 0,     max: 100,   step: 5,    channel: 's'},
+            {label: 'Lightness',    min: 0,     max: 100,   step: 5,    channel: 'l'}
+        ]
+    };
+
+    colorModelRadios = [...document.querySelectorAll('input[name=color-model]')];
+    colorStringLabel = document.querySelector('.model-selector span');
+
+    isGrayCheckbox = document.querySelector('#gray');
+    showChannelHintsCheckbox = document.querySelector('#show-channel-hints');
+
+    channelLabels = [...document.querySelectorAll('.sliders label')];
+    channelInputs = [...document.querySelectorAll('.sliders input')];
+
+    colorModel = colorModelRadios.find(input => input.checked).value;
+    color = new Color(
+        // [0..255] with step 5
+        Math.round(Math.random() * 51) * 5,
+        Math.round(Math.random() * 51) * 5,
+        Math.round(Math.random() * 51) * 5
+    );
 }
 
-var colors = {
-	c1: new $color.hsla(30, 40, 50),
-	c2: new $color.hsla(230, 70, 30, .3),
-	c3: new $color.hsla(180, 90, 60, .8),
-	c4: new $color.rgb('#3f55a8'),
-	c5: new $color.rgba('rgba(80, 160, 122, .7)'),
-	c6: new $color.rgba('rgb(180, 60, 30)')
-};
 
-var selected = {};
-
-/**
- * This is the event handler
- * @this {HTMLElement} <input type="radio">
- */
-function manageRadioSelector () {
-	var colKey;
-	selected.p = this.parentElement;
-	selected.span = this.parentElement && this.parentElement.getElementsByTagName('span')[0];
-	colKey = selected.p.id;
-
-	if (['c1', 'c2', 'c3'].indexOf(colKey) !== -1) {
-		document.getElementById('hue').value = colors[ colKey ].h;
-		document.getElementById('saturation').value = colors[ colKey ].s;
-		document.getElementById('lightness').value = colors[ colKey ].l;
-		document.getElementById('hsl-alpha').value = colors[ colKey ].a;
-		['red', 'green', 'blue', 'rgb-alpha'].forEach(function (id) {
-			document.getElementById(id).disabled = true;
-		});
-		['hue', 'saturation', 'lightness', 'hsl-alpha'].forEach(function (id) {
-			document.getElementById(id).disabled = false;
-		});
-	} else { // ['c4', 'c5', 'c6']
-		document.getElementById('red').value = colors[ colKey ].r;
-		document.getElementById('green').value = colors[ colKey ].g;
-		document.getElementById('blue').value = colors[ colKey ].b;
-		document.getElementById('rgb-alpha').value = colors[ colKey ].a;
-		['hue', 'saturation', 'lightness', 'hsl-alpha'].forEach(function (id) {
-			document.getElementById(id).disabled = true;
-		});
-		['red', 'green', 'blue', 'rgb-alpha'].forEach(function (id) {
-			document.getElementById(id).disabled = false;
-		});
-	}
+function updateSliders() {
+    colorModels[colorModel].forEach((props, i) => {
+        channelLabels[i].innerHTML = props.label;
+        channelInputs[i].setAttribute('min', props.min);
+        channelInputs[i].setAttribute('max', props.max);
+        channelInputs[i].setAttribute('step', props.step);
+        channelInputs[i].setAttribute('channel', props.channel);
+        channelInputs[i].value = color[props.channel];
+    });
 }
 
-/**
- * This is the event handler
- * @this {HTMLElement} <input type="range">
- */
-function manageColorComponent () {
-	var val = +this.value;
-	var color;
 
-	if (!selected.span || !selected.p) {
-		return;
-	}
+function updateColor(props = {}) {
+    color.set(props);
 
-	color = colors[ selected.p.id ];
+    const hexColor = color.toString();
+    document.body.style.backgroundColor = hexColor;
 
-	switch (this.id) {
-		case "hue":
-			color.set({ h: val });
-			break;
-		case "saturation":
-			color.set({ s: val });
-			break;
-		case "lightness":
-			color.set({ l: val });
-			break;
-		case "hsl-alpha":
-			if (color.type === 'hsla') {
-				color.set({ a: val });
-			}
-			break;
-		case "red":
-			color.set({ r: val });
-			break;
-		case "green":
-			color.set({ g: val });
-			break;
-		case "blue":
-			color.set({ b: val });
-			break;
-		case "rgb-alpha":
-			if (color.type === 'rgba') {
-				color.set({ a: val });
-			}
-			break;
-	}
-	selected.p.style.backgroundColor = color.toString();
-	selected.span.innerHTML = color.toString();
-	if (color.type === 'rgb') {
-		selected.span.innerHTML += ', ' + color.toString('hex');
-	}
+    colorStringLabel.innerHTML = color.toString(colorModel === 'rgb' ? Color.RGB : Color.HSL)
+        + (colorModel === 'rgb' ? ', ' + hexColor : '');
 }
 
-// initial background-color setting
-for (var key in colors) {
-	if (colors.hasOwnProperty(key)) {
-		document.querySelector('#' + key).style.backgroundColor = colors[key].toString();
-		document.querySelector('#' + key + ' span').innerHTML = colors[key].toString();
-		// document.getElementById(key)
-		// document.getElementById(key).getElementsByTagName('span')[0].innerHTML = colors[key].toString();
-		if (colors[key].type === 'rgb') {
-			document.querySelector('#' + key + ' span').innerHTML += ', ' + colors[key].toString('hex');
-		}
-	}
+
+function getGradientValues(channel) {
+    if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
+        return ['#000', '#fff'];
+    }
+
+    let values;
+    const clone = color.clone();
+
+    if (channel === 'h') {
+        // provide all the rainbow here otherwise there will be no gradient (red-to-red)
+        values = [0, 60, 120, 180, 240, 300, 360];
+    } else if (channel === 's') {
+        values = [0, 100];
+    } else if (channel === 'l') {
+        // need proper color in the middle otherwise there will be gradient black-to-white
+        values = [0, 50 ,100];
+    } else {
+        values = [0, 255];  // RGB channels
+    }
+
+    values = values.map(function (v) {
+        return clone.set({ [channel]: v }).toString();
+    });
+
+    return values;
 }
 
-// initial slider setting
-manageRadioSelector.call(document.querySelector('[name=color][checked=true]'));
 
-_toArray(document.querySelectorAll('[name=color]')).forEach(function (input) {
-	input.onchange = manageRadioSelector;
-});
-_toArray(document.querySelectorAll('[type=range]')).forEach(function (input) {
-	input.onchange = manageColorComponent;
-});
+function updateSliderGradients(force) {
+    if (!showChannelHintsCheckbox.checked && !force) {
+        return;
+    }
 
-_toArray(document.querySelectorAll('.container h4')).forEach(function (header) {
-	header.addEventListener('click', function () {
-		this.parentElement.className =
-			this.parentElement.className === 'container collapsed'
-			? 'container'
-			: 'container collapsed';
-	}, true);
-});
+    channelInputs.forEach(function (input) {
+        if (showChannelHintsCheckbox.checked) {
+            const gradientValues = getGradientValues( input.getAttribute('channel')).join(', ');
+            input.parentElement.style.background = `linear-gradient(to right, ${gradientValues})`;
+            input.parentElement.style.backgroundRepeat = 'no-repeat';
+            input.parentElement.style.backgroundPosition = '90% 0';
+            input.parentElement.style.backgroundSize = '80% 100%';
+        } else {
+            input.parentElement.style.background = 'none';
+        }
+    });
+}
 
-// --- RGB / HSL conversion ---
-function _rnd (from, to) {
-	if (to === undefined) {
-		to = from;
-		from = 0;
-	}
-	return Math.floor(Math.random() * (to - from) + from);
-};
 
-var __c1 = new $color.hsla(_rnd(360), _rnd(100), _rnd(100), Math.random() * .7 + .3);
-var __c2 = __c1.toRgba();
-var __c3 = __c2.toHsla();
-document.getElementById('rgb01').innerHTML = __c1.toString();
-document.getElementById('rgb01').style.backgroundColor = __c1.toString();
-document.getElementById('hsl01').innerHTML = __c2.toString();
-document.getElementById('hsl01').style.backgroundColor = __c2.toString();
-document.getElementById('rgb02').innerHTML = __c3.toString();
-document.getElementById('rgb02').style.backgroundColor = __c3.toString();
+function setSlidersToGrey(value) {
+    channelInputs.forEach(function (inp) {
+        inp.value = value;
+    });
+}
+
+
+function onLoad() {
+    init();
+
+    updateSliders();
+    updateColor();
+    updateSliderGradients();
+
+
+    // --- (*) RGB    ( ) HSL ---
+    colorModelRadios.forEach(function (input) {
+        input.addEventListener('change', (e) => {
+            colorModel = colorModel === 'rgb' ? 'hsl' : 'rgb';
+            updateSliders();
+            isGrayCheckbox.disabled = colorModel === 'hsl';
+            if (colorModel === 'hsl') {
+                isGrayCheckbox.checked = false;
+            }
+            updateColor();
+            updateSliderGradients();
+        }, false);
+    });
+
+
+    // --- [x] grey ---
+    isGrayCheckbox.addEventListener('change', () => {
+        if (isGrayCheckbox.checked) {
+            const grey = Math.round((color.r + color.g + color.b) / 3);
+            setSlidersToGrey(grey);
+            updateColor({r: grey, g: grey, b: grey});
+        } else {
+            updateColor();
+        }
+        updateSliderGradients();
+    }, false);
+
+
+    // --- [x] show channel hints ---
+    showChannelHintsCheckbox.addEventListener('change', () => {
+        updateSliderGradients(true);
+    }, false);
+
+
+    // Channel [ ---------||--- ]
+    channelInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            const value = +input.value;
+            if (!isGrayCheckbox.disabled && isGrayCheckbox.checked) {
+                setSlidersToGrey(value);
+                updateColor({r: value, g: value, b: value});
+            } else {
+                const channel = input.getAttribute('channel');
+                updateColor({ [channel]: value });
+            }
+            updateSliderGradients();
+        }, false);
+    });
+}

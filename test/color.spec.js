@@ -30,12 +30,20 @@ describe('Color constructor', () => {
         assert(color.b, 0x33);
     });
 
-    it('clones', () => {
+    it('should provide the clones', () => {
         const color = new Color(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.random());
         const clone = color.clone();
         assert(color !== clone);
         assert.deepStrictEqual(color, clone);
         assert(color.toString(Color.HSLA) === clone.toString(Color.HSLA));
+    });
+
+    it('should clone gray colors', () => {
+        const color = new Color({h: 240, s: 0, l: 50});
+        const clone = color.clone();
+        color.h += 20;
+        clone.h += 20;
+        assert(color.toString(Color.HSL) === clone.toString(Color.HSL));
     });
 });
 
