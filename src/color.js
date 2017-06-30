@@ -1,7 +1,9 @@
 'use strict';
 
+const { RGB, RGBA, RGB_HEX, HSL, HSLA } = require('./constants');
 const normalize = require('./normalize');
 const { rgb2hsl, hsl2rgb } = require('./convert');
+const { parse, MASKS } = require('./parse');
 
 const RGB_CHANNELS = ['r', 'g', 'b'];
 const HSL_CHANNELS = ['h', 's', 'l'];
@@ -13,18 +15,25 @@ class Color {
         Object.defineProperty(this, '_data', { configurable: false, enumerable: false, value: {} });
         Object.defineProperty(this, '_shouldUpdate', { configurable: false, enumerable: false, writable: true });
 
-        if (_isSequence(arguments)) {
+        if (arguments.length >= 3) {
             [ this.r, this.g, this.b, this.a ] = arguments;
             _assignHls(this);
-        } else if (_isRgbObject(arguments)) {
-            _assignRgb(this, arguments[0]);
-            _assignHls(this);
-        } else if (_isHslObject(arguments)) {
-            _assignHls(this, arguments[0]);
-            _assignRgb(this);
         } else {
-            [ this.r, this.g, this.b, this.a ] = [ 0, 0, 0, 1 ];
-            _assignHls(this);
+            let arg = arguments[0];
+            if (typeof arg === 'string') {
+                arg = parse(arg);
+            }
+
+            if (_isRgbObject(arg)) {
+                _assignRgb(this, arg);
+                _assignHls(this);
+            } else if (_isHslObject(arg)) {
+                _assignHls(this, arg);
+                _assignRgb(this);
+            } else {
+                [ this.r, this.g, this.b, this.a ] = [ 0, 0, 0, 1 ];
+                _assignHls(this);
+            }
         }
         this._shouldUpdate = true;
 
@@ -38,11 +47,11 @@ class Color {
     static normalize() { return normalize; }
     static rgb2hsl() { return rgb2hsl; }
     static hsl2rgb() { return hsl2rgb; }
-    static get RGB() { return 'rgb'; }
-    static get RGBA() { return 'rgba'; }
-    static get RGB_HEX() { return 'rgb_hex'; }
-    static get HSL() { return 'hsl'; }
-    static get HSLA() { return 'hsla'; }
+    static get RGB() { return RGB; }
+    static get RGBA() { return RGBA; }
+    static get RGB_HEX() { return RGB_HEX; }
+    static get HSL() { return HSL; }
+    static get HSLA() { return HSLA; }
 
 
     // ---------------- RGB ----------------
@@ -197,33 +206,28 @@ class Color {
 
     toString(type) {
         switch (type) {
-            case Color.RGB:
+            case RGB:
                 return `rgb(${this.r}, ${this.g}, ${this.b})`;
-            case Color.RGBA:
+            case RGBA:
                 return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
-            case Color.HSL:
+            case HSL:
                 return `hsl(${this.h}, ${this.s}%, ${this.l}%)`;
-            case Color.HSLA:
+            case HSLA:
                 return `hsla(${this.h}, ${this.s}%, ${this.l}%, ${this.a})`;
-            default: // Color.RGB_HEX
+            default: // RGB_HEX
                 return `#${_toHex(this.r)}${_toHex(this.g)}${_toHex(this.b)}`;
         }
     }
 }
 
 
-function _isSequence(args) {
-    return args.length >= 3;
+function _isRgbObject(arg) {
+    return typeof arg === 'object' && RGB_CHANNELS.some(ch => arg[ch] !== undefined);
 }
 
 
-function _isRgbObject(args) {
-    return typeof args[0] === 'object' && RGB_CHANNELS.some(ch => args[0][ch] !== undefined);
-}
-
-
-function _isHslObject(args) {
-    return typeof args[0] === 'object' && HSL_CHANNELS.some(ch => args[0][ch] !== undefined);
+function _isHslObject(arg) {
+    return typeof arg === 'object' && HSL_CHANNELS.some(ch => arg[ch] !== undefined);
 }
 
 
