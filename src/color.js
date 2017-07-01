@@ -47,11 +47,13 @@ class Color {
     static normalize() { return normalize; }
     static rgb2hsl() { return rgb2hsl; }
     static hsl2rgb() { return hsl2rgb; }
+    static parse() { return parse; }
     static get RGB() { return RGB; }
     static get RGBA() { return RGBA; }
     static get RGB_HEX() { return RGB_HEX; }
     static get HSL() { return HSL; }
     static get HSLA() { return HSLA; }
+    static get Masks() { return MASKS; }
 
 
     // ---------------- RGB ----------------
@@ -137,7 +139,7 @@ class Color {
             return this;
         }
 
-        if (channels.a !== undefined) { // alpha channel; does not affect neither RGB not HSL
+        if (channels.a !== undefined) { // alpha channel; does not affect neither RGB nor HSL
             this.a = channels.a;
         }
 

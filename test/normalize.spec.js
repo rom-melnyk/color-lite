@@ -17,7 +17,7 @@ describe('normalize', () => {
                 assert.equal(normalize[method](300), 255);
             });
 
-            it('should return save value if [0..255]', () => {
+            it('should return given value if [0..255]', () => {
                 [0, 100, 255].forEach((v) => {
                     assert.equal(normalize[method](v), v);
                 });
@@ -37,7 +37,7 @@ describe('normalize', () => {
             });
         });
 
-        it('should return x if (360 + x)', () => {
+        it('should return x if (360 * N + x)', () => {
             [10, 100, 200].forEach((v) => {
                 assert.equal(normalize.h(360 + v), v);
             });
@@ -73,7 +73,7 @@ describe('normalize', () => {
                 assert.equal(normalize[method](300), 100);
             });
 
-            it('should return save value if [0..100]', () => {
+            it('should return given value if [0..100]', () => {
                 [0, 50, 100].forEach((v) => {
                     assert.equal(normalize[method](v), v);
                 });

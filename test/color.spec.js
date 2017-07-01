@@ -38,7 +38,7 @@ describe('Color constructor', () => {
 
     it('should create HSL channels if RGB values are set', () => {
         const { h, s, l } = new Color({ r: 0xaa, g: 0x88, b: 0x33 });
-        // channels values might differ by 1 from expected ones due to rounding
+        // channel values might differ by 1 from expected ones due to rounding
         assert(Math.abs(h - 43) <= 1);
         assert(Math.abs(s - 54) <= 1);
         assert(Math.abs(l - 43) <= 1);
@@ -46,6 +46,7 @@ describe('Color constructor', () => {
 
     it('should create RGB channels if HSL values are set', () => {
         const { r, g, b } = new Color({ h: 43, s: 54, l: 43 });
+        // channel values might differ by 1 from expected ones due to rounding
         assert(Math.abs(r - 0xaa) <= 1);
         assert(Math.abs(g - 0x88) <= 1);
         assert(Math.abs(b - 0x33) <= 1);
@@ -59,7 +60,7 @@ describe('Color constructor', () => {
         assert(color.toString(Color.HSLA) === clone.toString(Color.HSLA));
     });
 
-    it('should clone gray colors', () => {
+    it('should clone gray colors', () => { // @see note in color.js#clone()
         const color = new Color({h: 240, s: 0, l: 50});
         const clone = color.clone();
         color.h += 20;

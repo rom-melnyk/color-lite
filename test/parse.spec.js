@@ -11,9 +11,11 @@ function rnd(max) {
 
 
 describe('parse', () => {
-    it('should not parse invalid string', () => {
-        const parsed = parse('asdfasdfasdf');
-        assert.deepEqual(parsed, { r: 0, g: 0, b: 0 });
+    it('should parse invalid string as black', () => {
+        const parsed_1 = parse('asdfasdfasdf');
+        assert.deepEqual(parsed_1, { r: 0, g: 0, b: 0 });
+        const parsed_2 = parse('#aa99zz');
+        assert.deepEqual(parsed_2, { r: 0, g: 0, b: 0 });
     });
 
     it('should parse the rgb(...) string', () => {
@@ -23,6 +25,7 @@ describe('parse', () => {
     });
 
     it('should parse the rgba(...) string', () => {
+        // alpha is float so it does not make sense to set it too precise
         const [ r, g, b, a ] = [ rnd(255), rnd(255), rnd(255), .33 ];
         const parsed = parse(`  rgba(${r},${g} ,   ${b}, ${a} )`);
         assert.deepEqual(parsed, { r, g, b, a });
@@ -42,6 +45,7 @@ describe('parse', () => {
     });
 
     it('should parse the hsla(...) string', () => {
+        // alpha is float so it does not make sense to set it too precise
         const [ h, s, l, a ] = [ rnd(360), rnd(100), rnd(100), .56 ];
         const parsed = parse(`  hsla( ${h},  ${s} % ,${l}% , ${a} )`);
         assert.deepEqual(parsed, { h, s, l, a });
