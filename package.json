@@ -1,5 +1,5 @@
 {
-  "name": "color-js",
+  "name": "color-lite",
   "version": "1.0.0",
   "description": "The convenient way to handle the color in JS",
   "keywords": [
@@ -24,12 +24,12 @@
     "url": "https://codedoc255.wordpress.com"
   },
   "bugs": {
-    "url": "https://github.com/rom-melnyk/color.js/issues",
+    "url": "https://github.com/rom-melnyk/color-lite/issues",
     "email": "email.rom.melnyk@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rom-melnyk/color.js"
+    "url": "https://github.com/rom-melnyk/color-lite"
   },
   "devDependencies": {
     "browserify": "^14.4.0",
@@ -37,9 +37,9 @@
     "sinon": "^2.3.6",
     "uglify-es": "^3.0.22"
   },
-  "main": "src/color.js",
+  "main": "src/color-lite.js",
   "scripts": {
-    "prod": "browserify src/color.js -o color.dev.js && uglifyjs color.dev.js --warn --ecma 6 -c -m -o color.min.js && rm color.dev.js",
+    "prod": "browserify src/color-lite.js -o color-lite.dev.js && uglifyjs color-lite.dev.js --warn --ecma 6 -c -m -o color-lite.min.js && rm color-lite.dev.js",
     "test": "mocha"
   }
 }

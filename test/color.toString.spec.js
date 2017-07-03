@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const Color = require('../src/color');
+const Color = require('../src/color-lite');
 
 
 describe('Color .toString()', () => {

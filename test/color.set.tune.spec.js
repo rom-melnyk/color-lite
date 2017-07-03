@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const sinon = require('sinon');
-const Color = require('../src/color');
+const Color = require('../src/color-lite');
 
 
 describe('Color .set()', () => {
