@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
+const sinon = require('sinon');
 const Color = require('../src/color');
-
 
 describe('Color constructor', () => {
     it('should behave like constructor', () => {
@@ -50,6 +50,13 @@ describe('Color constructor', () => {
         assert(Math.abs(r - 0xaa) <= 1);
         assert(Math.abs(g - 0x88) <= 1);
         assert(Math.abs(b - 0x33) <= 1);
+    });
+
+    it('should produce console.warn() when mixin RGB and HSL channels', () => {
+        const spy = sinon.spy(console, 'warn');
+        const color = new Color({ r: 45, h: 100 });
+        assert(console.warn.called);
+        console.warn.restore();
     });
 
     it('should clone', () => {

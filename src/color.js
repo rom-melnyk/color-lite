@@ -3,11 +3,10 @@
 const { RGB, RGBA, RGB_HEX, HSL, HSLA } = require('./constants');
 const normalize = require('./normalize');
 const { rgb2hsl, hsl2rgb } = require('./convert');
-const { parse, MASKS } = require('./parse');
+const { parse } = require('./parse');
 
 const RGB_CHANNELS = ['r', 'g', 'b'];
 const HSL_CHANNELS = ['h', 's', 'l'];
-const ALL_CHANNELS = ['r', 'g', 'b', 'a', 'h', 's', 'l'];
 
 
 class Color {
@@ -24,10 +23,13 @@ class Color {
                 arg = parse(arg);
             }
 
-            if (_isRgbObject(arg)) {
+            if (_looksLikeRgbObject(arg)) {
+                if (_looksLikeHslObject(arg)) {
+                    _warnAboutBadParams('new Color()', arg);
+                }
                 _assignRgb(this, arg);
                 _assignHls(this);
-            } else if (_isHslObject(arg)) {
+            } else if (_looksLikeHslObject(arg)) {
                 _assignHls(this, arg);
                 _assignRgb(this);
             } else {
@@ -44,16 +46,11 @@ class Color {
     }
 
 
-    static normalize() { return normalize; }
-    static rgb2hsl() { return rgb2hsl; }
-    static hsl2rgb() { return hsl2rgb; }
-    static parse() { return parse; }
     static get RGB() { return RGB; }
     static get RGBA() { return RGBA; }
     static get RGB_HEX() { return RGB_HEX; }
     static get HSL() { return HSL; }
     static get HSLA() { return HSLA; }
-    static get Masks() { return MASKS; }
 
 
     // ---------------- RGB ----------------
@@ -152,8 +149,11 @@ class Color {
             }
         });
 
-        if (shouldChange) { // RGB channels were changed
+        if (shouldChange) { // RGB channels were changed; update HSL channels accordingly
             _assignHls(this);
+            if (_looksLikeHslObject(channels)) {
+                _warnAboutBadParams('color.set()', channels);
+            }
         } else {
             HSL_CHANNELS.forEach((ch) => {
                 if (channels[ch] !== undefined) {
@@ -162,7 +162,7 @@ class Color {
                 }
             });
 
-            if (shouldChange) { // HSL channels were changed
+            if (shouldChange) { // HSL channels were changed; update RGB channels accordingly
                 _assignRgb(this);
             }
         }
@@ -174,35 +174,33 @@ class Color {
 
     /**
      * Change the channel values by provided delta.
-     * @param {{r: [number], g: [number], b: [number], h: [number], s: [number], l: [number], a: [number]}} channels
+     * @param {{r: [number], g: [number], b: [number], h: [number], s: [number], l: [number], a: [number]}} deltas
      * @return {Color}
      */
-    tune(channels) {
-        if (!channels) {
+    tune(deltas) {
+        if (!deltas) {
             return this;
         }
 
-        const params = ALL_CHANNELS.reduce((params, ch) => {
-            const delta = +channels[ch];
-            if (!isNaN(delta)) {
-                params[ch] = this[ch] + delta;
-            }
-            return params;
-        }, {});
+        if (_looksLikeRgbObject(deltas) && _looksLikeHslObject(deltas)) {
+            _warnAboutBadParams('color.tune()', deltas);
+        }
 
+        const params = {};
+        RGB_CHANNELS.reduce((params, ch) => _enrichTuneObjectWithChannelValue(params, deltas, this, ch), params);
+        if (Object.keys(params).length === 0) { // no RGB params found; it's safe to forward HSL params
+            HSL_CHANNELS.reduce((params, ch) => _enrichTuneObjectWithChannelValue(params, deltas, this, ch), params);
+        }
+
+        _enrichTuneObjectWithChannelValue(params, deltas, this, 'a'); // alpha channel is handled independently
         return this.set(params);
     }
 
 
 
     clone() {
-        const clone = new Color(this);
-        if (this.s === 0) {
-            // hue is considered as 0 (always red) for any of gray colors (s === 0)
-            // changing the hue for gray does not change the perception but changes color possibilities
-            clone.h = this.h;
-        }
-        return clone;
+        // If clone RGB channels, HSL gray (s === 0) is corrupted because Hue is considered as zero for any grey color
+        return new Color({ h: this.h, s: this.s, l: this.l, a: this.a });
     }
 
 
@@ -223,12 +221,12 @@ class Color {
 }
 
 
-function _isRgbObject(arg) {
+function _looksLikeRgbObject(arg) {
     return typeof arg === 'object' && RGB_CHANNELS.some(ch => arg[ch] !== undefined);
 }
 
 
-function _isHslObject(arg) {
+function _looksLikeHslObject(arg) {
     return typeof arg === 'object' && HSL_CHANNELS.some(ch => arg[ch] !== undefined);
 }
 
@@ -260,6 +258,22 @@ function _assignHls(instance, values) {
         ({ h: instance.h, s: instance.s, l: instance.l } = rgb2hsl(instance));
     }
     instance._shouldUpdate = prevShouldConvert;
+}
+
+
+function _enrichTuneObjectWithChannelValue(obj, newValues, currentValues, chName) {
+    const delta = +newValues[ chName ];
+    if (!isNaN(delta)) {
+        obj[ chName ] = currentValues[ chName ] + delta;
+    }
+    return obj;
+}
+
+
+function _warnAboutBadParams(area, obj) {
+    if (console && typeof console.warn === 'function') {
+        console.warn(`[ ${area} ]: both RGB and HSL props appeared together. HSL ones are ignored!`, obj);
+    }
 }
 
 

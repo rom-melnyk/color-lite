@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const sinon = require('sinon');
 const Color = require('../src/color');
 
 
@@ -42,6 +43,14 @@ describe('Color .set()', () => {
         color.set({ h: 169, s: 34, l: 13 }); // http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
         assert.equal(color.toString(Color.RGB), 'rgb(22, 44, 40)');
     });
+
+    it('should produce console.warn() when mixin RGB and HSL channels', () => {
+        const spy = sinon.spy(console, 'warn');
+        const color = new Color('#8a4');
+        color.set({ r: 50, h: -180 });
+        assert(console.warn.called);
+        console.warn.restore();
+    });
 });
 
 
@@ -56,5 +65,13 @@ describe('Color .tune()', () => {
         const color = new Color({ h: 60, s: 50, l: 90 });
         color.tune({ h: 500, s: -30, l: 5 });
         assert.equal(color.toString(Color.HSL), 'hsl(200, 20%, 95%)');
+    });
+
+    it('should produce console.warn() when mixin RGB and HSL channels', () => {
+        const spy = sinon.spy(console, 'warn');
+        const color = new Color('#8a4');
+        color.tune({ r: 50, h: -180 });
+        assert(console.warn.called);
+        console.warn.restore();
     });
 });
