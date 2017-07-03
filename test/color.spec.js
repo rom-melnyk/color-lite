@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const sinon = require('sinon');
-const Color = require('../src/color');
+const Color = require('../src/color-lite');
 
 describe('Color constructor', () => {
     it('should behave like constructor', () => {
@@ -67,7 +67,7 @@ describe('Color constructor', () => {
         assert(color.toString(Color.HSLA) === clone.toString(Color.HSLA));
     });
 
-    it('should clone gray colors', () => { // @see note in color.js#clone()
+    it('should clone gray colors', () => { // @see note in color-lite.js#clone()
         const color = new Color({h: 240, s: 0, l: 50});
         const clone = color.clone();
         color.h += 20;
