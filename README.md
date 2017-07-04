@@ -44,6 +44,8 @@ Use `new Color(...)` to create the **color instance.**
    `new Color(180, 30, 75)`,  
    `new Color(85, 120, 175, .5)`.
 
+If nothing parsable is provided, `new Color()` returns the instance of **black:** `rgba(0, 0, 0, 1)`.
+
 
 #### Normalization and channel defaults
 
@@ -92,8 +94,6 @@ c.toString(Color.HSL); // hsl(262, 96%, 50%)
 c.toString(); // #5f05fa
 ```
 
-If nothing parsable provided, `new Color()` returns the instance of **black** (`rgba(0, 0, 0, 1)`).
-
 
 ## Static constants
 
@@ -103,7 +103,7 @@ If nothing parsable provided, `new Color()` returns the instance of **black** (`
 ## Tips and tricks
 
 * The **HSL** model is more human-friendly as the **RGB.**
-* It speaks same language human beings do, for instance, it says _'make the color darker,'_ or _make it more blue-ish._  
+* It speaks same language human beings do, for instance, it says _"make the color darker",_ or _"make it more blue-ish"._  
    This is done via the `.tune()` method:
 ```javascript
 const color = new Color('#af8c63');
