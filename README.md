@@ -3,6 +3,12 @@
 Supports parsing and convenient handling of RGB(A) and HSL(A) color representations. Provides pretty same interface for color manipulations as LESS/SASS does.  
    Read more about [RGB](https://en.wikipedia.org/wiki/RGB_color_model) and [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV).
 
+First,
+```bash
+npm install --save color-lite
+```
+
+then use it as a module in your JS code:
 ```javascript
 const Color = require('color-lite');
 const c1 = new Color(30, 50, 70, .9);
@@ -41,13 +47,13 @@ Use `new Color(...)` to create the **color instance.**
 
 #### Normalization and channel defaults
 
-Input values for channels are normalized:
+Input values for channels are **normalized:**
 * _RGB_ values are normalized to `0..255`;
 * _Hue_ is normalized to `0..359` respecting the "wrap-around within the color circle" principle (`-30` is converted to `330`; `400` is converted to `40`);
 * both _Saturation_ and _Lightness_ respect the range `0..100`, not `0..1`;
 * _Alpha_ channel is normalized to `0..1`.
 
-Default value for all the channels is `0` except of _Alpha_; it's `1` by default.
+**Default** value for all the channels is `0` except of _Alpha_; it's `1` by default.
 
 
 ## The color instance
@@ -86,6 +92,8 @@ c.toString(Color.HSL); // hsl(262, 96%, 50%)
 c.toString(); // #5f05fa
 ```
 
+If nothing parsable provided, `new Color()` returns the instance of **black** (`rgba(0, 0, 0, 1)`).
+
 
 ## Static constants
 
@@ -95,7 +103,8 @@ c.toString(); // #5f05fa
 ## Tips and tricks
 
 * The **HSL** model is more human-friendly as the **RGB.**
-* You can emulate human-friendly color behavior by converting the color to **HSL/HSLA** and using the `.tune()` method:
+* It speaks same language human beings do, for instance, it says _'make the color darker,'_ or _make it more blue-ish._  
+   This is done via the `.tune()` method:
 ```javascript
 const color = new Color('#af8c63');
 
@@ -125,6 +134,8 @@ Open the `./demo/demo.html` to check the power of the library.
 
 ## Changes since color.js#0.6.0
 
+This library is successor of my project **color.js** (now discontinued). So what's new:
+
 * Constructor and entry point renamed: `$color(...)` &rarr; `Color(...)`.
 * No more per-type constructors:  
    `$color.rgb(...)` &rarr; `Color(...)`;  
@@ -142,6 +153,8 @@ const { r, g, b } = col;
 const { h, s, l, a } = col;
 ```
 * Static props and methods changed.
+* 100% ES6.
+* No more memory leaks via clone/create!
 
 
 ## Development
@@ -154,12 +167,7 @@ const { h, s, l, a } = col;
 
 ## Support
 
-The `color-lite.min.js` could be included in your HTML. In this case `window.Color` becomes globally accessible object.
-
-You can use the module with the NodeJS as well.
-
-* `npm install git://github.com/rom-melnyk/color-lite`;
-* `const Color = require('color-lite')`.
+The `color-lite.min.js` could be included in your HTML. In this case `window.Color` becomes globally accessible object. It works well with all modern browsers with ES6 support.
 
 
 ## Credits
