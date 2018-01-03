@@ -1,4 +1,4 @@
-# color-lite v1.0.0 &mdash; the color managing library
+# color-lite v1.0.0 &mdash; the color management library
 
 Supports parsing and convenient handling of RGB(A) and HSL(A) color representations. Provides pretty same interface for color manipulations as LESS/SASS does.  
    Read more about [RGB](https://en.wikipedia.org/wiki/RGB_color_model) and [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV).
@@ -51,7 +51,7 @@ If nothing parsable is provided, `new Color()` returns the instance of **black:*
 
 Input values for channels are **normalized:**
 * _RGB_ values are normalized to `0..255`;
-* _Hue_ is normalized to `0..359` respecting the "wrap-around within the color circle" principle (`-30` is converted to `330`; `400` is converted to `40`);
+* _Hue_ is normalized to `0..359` respecting the color circle wrap-around (`-30` is considered as `330`; `400` is considered as `40`);
 * both _Saturation_ and _Lightness_ respect the range `0..100`, not `0..1`;
 * _Alpha_ channel is normalized to `0..1`.
 
@@ -80,7 +80,7 @@ c.toString(Color.HSL); // hsl(211, 100%, 60%)
 ```
 * `.set(channels)` method. It expects the `Object` (like `{h: 30, s: 50, l: 90}`) and sets the channel values accordingly.
   * Not all the channels are mandatory: `.set({h: 30, a: .3})` is fine.
-  * **Never** mix up RGB ans HSL channels in one object. If this happens, RGB channels are taken into consideration and HSL ones are ignored. `console.warn()` also appears.
+  * **Never** mix up RGB ans HSL channels in one object. If this happens, RGB channels are taken into consideration and HSL ones are ignored. `console.warn()` is emitted.
 * `.tune(channels)` method. It behaves like `.set()` but expects **the delta** not the value: `c1.tune({l: -20})` decreases the _Lightness_ channel in 20 points.
   * Channel [constraints](#normalization-and-channel-defaults) are respected as well.
   * Both `set()` and `.tune()` return the reference to the object instance so they are _chainable:_  
@@ -97,14 +97,14 @@ c.toString(); // #5f05fa
 
 ## Static constants
 
-`Color.RGB`, `Color.RGBA`, `Color.HSL`, `Color.HSLA` and `Color.RGB_HEX` stand for color type constants. These ones are used for `.toString()`
+`Color.RGB`, `Color.RGBA`, `Color.HSL`, `Color.HSLA` and `Color.RGB_HEX` stand for color type constants. These ones are used for `.toString()`.
 
 
 ## Tips and tricks
 
 * The **HSL** model is more human-friendly as the **RGB.**
-* It speaks same language human beings do, for instance, it says _"make the color darker",_ or _"make it more blue-ish"._  
-   This is done via the `.tune()` method:
+* It speaks same language human beings do, for instance, it understands _"make the color darker",_ or _"make it more blue-ish"._  
+   Such tricks done by the `.tune()` method:
 ```javascript
 const color = new Color('#af8c63');
 
@@ -119,11 +119,11 @@ const opposite = color.clone().tune({h: 180});
 const harmonical_01 = color.clone().tune({h: 120}); // or any other hue shift
 const harmonical_02 = color.clone().tune({h: -120});
 
-const totallyDifferent = color.clone().tune({h: 30, s: 40}).set({l: 50}); // the sequence might be continued
+const totallyDifferent = color.clone().tune({h: 30, s: 40}).set({l: 50}); // the sequence might continue
 
 document.body.style.backgroundColor = totallyDifferent.toString(); // "#d5db24"
 ```
-* **Pay attention,** while converting _RGB &rarr; HSL &rarr; RGB'_, channels in `RGB` and `RGB'` might differ a bit. That's ok due to necessity to round floats to integers and vice versa. Such delta does not affect how the color is recognized by the human eye.  
+* **Pay attention,** while converting _RGB &rarr; HSL &rarr; RGB'_, channels in `RGB` and `RGB'` might differ a bit. That's ok due to necessity to round floats to integers. Such delta does not affect how the color is recognized by the human eye.  
    Same happens by comparing results of two different _RGB &harr; HSL_ converters.
 
 
